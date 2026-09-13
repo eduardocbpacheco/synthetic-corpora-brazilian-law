@@ -1,0 +1,27 @@
+# Nada de credencial, em nenhuma forma. A montagem já filtra, mas o repositório também
+# precisa recusar por conta própria: quem clonar e trabalhar aqui não passa pelo filtro.
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.env
+.env.*
+.netrc
+credentials
+usuarios.json
+
+# dados e artefatos pesados vivem nos depósitos, não aqui
+data/
+adapters/
+peft_cpt/
+logs/
+*.tar.gz
+revisao/dados/
+revisao/versoes/
+explorador/anotacoes/
+
+__pycache__/
+*.pyc
+.DS_Store

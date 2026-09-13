@@ -1,0 +1,1153 @@
+{
+ "titulo": "Código do pipeline: construção de corpus, treino, geração e julgamento",
+ "versao": "1.0",
+ "resumo": "Repositório instantâneo no momento da submissão. O depósito de código existe para dar DOI a um estado exato; o desenvolvimento continua no repositório de origem.",
+ "licenca": "MIT",
+ "deposito": "codigo",
+ "congelado_em": "2026-09-13 20:24:21",
+ "arquivos": 163,
+ "bytes": 1282726,
+ "itens": [
+  {
+   "caminho": "avaliacao/aggregate_results.py",
+   "origem": "avaliacao/aggregate_results.py",
+   "bytes": 12897,
+   "linhas": null,
+   "sha256": "c6a3238ad68a8af046e18c7c37f74c943299903ea7b0eb4d814bf26c1b70f520"
+  },
+  {
+   "caminho": "avaliacao/analisa_kappa_v4.py",
+   "origem": "avaliacao/analisa_kappa_v4.py",
+   "bytes": 13834,
+   "linhas": null,
+   "sha256": "63dc5aeb28d5c5b3e953abe9b363ae9885398518bb4a7286d48301970b44ebdf"
+  },
+  {
+   "caminho": "avaliacao/analisa_partes.py",
+   "origem": "avaliacao/analisa_partes.py",
+   "bytes": 4691,
+   "linhas": null,
+   "sha256": "bde1cc70de6b397d1a957bbc70b9dc8c71c57e307aa3f5c28d940376ce9ddd1a"
+  },
+  {
+   "caminho": "avaliacao/analises_pendentes.py",
+   "origem": "avaliacao/analises_pendentes.py",
+   "bytes": 12819,
+   "linhas": null,
+   "sha256": "85f5c07c33bc63ea8e5ff59a5ce0ed05387fce80c33abdefe16b94f19e7cb22a"
+  },
+  {
+   "caminho": "avaliacao/benchmark_schema.py",
+   "origem": "avaliacao/benchmark_schema.py",
+   "bytes": 5676,
+   "linhas": null,
+   "sha256": "a3f34990c6fabb9a3a6b0625f530fd7960286de6916b35995df7916700d64e13"
+  },
+  {
+   "caminho": "avaliacao/complementaridade.py",
+   "origem": "avaliacao/complementaridade.py",
+   "bytes": 4643,
+   "linhas": null,
+   "sha256": "bfb99ee7fb5c09bfe211d3aa3e6ac66d15c1c59963e6c6ed5042d70ab5d1596b"
+  },
+  {
+   "caminho": "avaliacao/contrastes_por_tarefa.py",
+   "origem": "avaliacao/contrastes_por_tarefa.py",
+   "bytes": 3984,
+   "linhas": null,
+   "sha256": "31219db26650f12d15cc3ec2c8527278d076b3ea83b5a2f726c15196a85da240"
+  },
+  {
+   "caminho": "avaliacao/cruza_eixos.py",
+   "origem": "avaliacao/cruza_eixos.py",
+   "bytes": 6113,
+   "linhas": null,
+   "sha256": "7f854a2519b92a886c7b38421f7e518953c4a6a4112a6e190dbebd2a9ef92cc4"
+  },
+  {
+   "caminho": "avaliacao/gera_respondentes.py",
+   "origem": "avaliacao/gera_respondentes.py",
+   "bytes": 13277,
+   "linhas": null,
+   "sha256": "dd00e3c32101fdfdc42fd4512231610c98649d46e937982983178d5a7e689be9"
+  },
+  {
+   "caminho": "avaliacao/judge.py",
+   "origem": "avaliacao/judge.py",
+   "bytes": 13415,
+   "linhas": null,
+   "sha256": "fc15006d3102dc1e75e5a038a0b583ef2ae7f56462b74ff4419b4a849ab8870f"
+  },
+  {
+   "caminho": "avaliacao/julga_rabula.py",
+   "origem": "avaliacao/julga_rabula.py",
+   "bytes": 8250,
+   "linhas": null,
+   "sha256": "67a934ca616e36b0e73f9f36e9e06747c9a91bfdffdfac15ee4e3b8b2feb4f1d"
+  },
+  {
+   "caminho": "avaliacao/julga_sincrono.py",
+   "origem": "avaliacao/julga_sincrono.py",
+   "bytes": 7960,
+   "linhas": null,
+   "sha256": "550b433ec1b33859afd5321f870fcef823454a37e86ace6e688029863731d8ae"
+  },
+  {
+   "caminho": "avaliacao/kappa_por_classe.py",
+   "origem": "avaliacao/kappa_por_classe.py",
+   "bytes": 7488,
+   "linhas": null,
+   "sha256": "9ea7a7f4bb71fa75cd0761d6153fc025ed8e9925ca1adb44b70ee185faa644e3"
+  },
+  {
+   "caminho": "avaliacao/nota.py",
+   "origem": "avaliacao/nota.py",
+   "bytes": 5797,
+   "linhas": null,
+   "sha256": "09cc10bf7189e16689304a54baed9176dad1f1ab7a47141f50fc53404bd08b89"
+  },
+  {
+   "caminho": "avaliacao/plota_eixos.py",
+   "origem": "avaliacao/plota_eixos.py",
+   "bytes": 5216,
+   "linhas": null,
+   "sha256": "820ef6081704668a3e23ffeb838b30d94ab8f49ad15ca4073f46005999f1cfaf"
+  },
+  {
+   "caminho": "avaliacao/regera_peca.py",
+   "origem": "avaliacao/regera_peca.py",
+   "bytes": 15439,
+   "linhas": null,
+   "sha256": "50157e4ddddcf6af8fda466e3135deb87369e1572a12b7fcc357a4e723ae8685"
+  },
+  {
+   "caminho": "avaliacao/regera_peca2.py",
+   "origem": "avaliacao/regera_peca2.py",
+   "bytes": 11057,
+   "linhas": null,
+   "sha256": "797a60280523541eb99b9d003398945c8a067df30cccff82037ba3dc0088d967"
+  },
+  {
+   "caminho": "avaliacao/regera_peca3.py",
+   "origem": "avaliacao/regera_peca3.py",
+   "bytes": 9059,
+   "linhas": null,
+   "sha256": "c779f893c66b0c1513adfc94b478ad0ec8ee29cc465a35092422f0e3edb44c00"
+  },
+  {
+   "caminho": "avaliacao/resume_ablacao.py",
+   "origem": "avaliacao/resume_ablacao.py",
+   "bytes": 4227,
+   "linhas": null,
+   "sha256": "2d35bd8c43f47baa424300446656ed465bed97eb110fd9ee7e750e53b1eb9b0d"
+  },
+  {
+   "caminho": "avaliacao/run_all_models.py",
+   "origem": "avaliacao/run_all_models.py",
+   "bytes": 16328,
+   "linhas": null,
+   "sha256": "2838c28781f1dda823ec364fef4fe5e41cc621adfca9f53da0f2971136a221b0"
+  },
+  {
+   "caminho": "avaliacao/run_evaluation.py",
+   "origem": "avaliacao/run_evaluation.py",
+   "bytes": 21047,
+   "linhas": null,
+   "sha256": "f559ff78d8aac1d88da2581ef0d4b29e043c243b6d1d29ce0b41b23a8a1ec654"
+  },
+  {
+   "caminho": "avaliacao/run_evaluation_bedrock.py",
+   "origem": "avaliacao/run_evaluation_bedrock.py",
+   "bytes": 26942,
+   "linhas": null,
+   "sha256": "f8dacb187c4fb5eed56ecd2b74113bc4c2f5584c6d65e4d56beab6565c3de4e3"
+  },
+  {
+   "caminho": "avaliacao/statistical_tests.py",
+   "origem": "avaliacao/statistical_tests.py",
+   "bytes": 13715,
+   "linhas": null,
+   "sha256": "4d5ecf5821bbdc4aa0ba32cedbd57ead0ed9ad3c128a18308b29cf5f4d9497e5"
+  },
+  {
+   "caminho": "avaliacao/tab_kappa_classe.py",
+   "origem": "avaliacao/tab_kappa_classe.py",
+   "bytes": 2983,
+   "linhas": null,
+   "sha256": "6a1faa98867d7e244cf23a34aa4dd262e18ae3d8b80c494833f8b3d450d676b7"
+  },
+  {
+   "caminho": "avaliacao/tabela_detalhada.py",
+   "origem": "avaliacao/tabela_detalhada.py",
+   "bytes": 4204,
+   "linhas": null,
+   "sha256": "ec40c36347f5dd65c633b058d81a69ebc01cb917b78597ff032b71dc8d1b39c6"
+  },
+  {
+   "caminho": "avaliacao/teste_pareado_eixos.py",
+   "origem": "avaliacao/teste_pareado_eixos.py",
+   "bytes": 5613,
+   "linhas": null,
+   "sha256": "5ca07732c0b6aa2b222a004b079d8ffb95df9d819b6fc3a9fc7e0d286d9a71cc"
+  },
+  {
+   "caminho": "pipeline/baixa_inteiro_teor_stf.py",
+   "origem": "pipeline/baixa_inteiro_teor_stf.py",
+   "bytes": 6006,
+   "linhas": null,
+   "sha256": "43e07020b29fed45e38c77851245fbc2f2d3ae2e71ecf3a93e1ead4f61ad0395"
+  },
+  {
+   "caminho": "pipeline/build_doutrina_corpus.py",
+   "origem": "pipeline/build_doutrina_corpus.py",
+   "bytes": 8017,
+   "linhas": null,
+   "sha256": "029bc576d5b1c9fd0e6d1abfe2ff5b0bf95127ee0cbeb9f15b8b6c1179516b29"
+  },
+  {
+   "caminho": "pipeline/build_juris_bruto.py",
+   "origem": "pipeline/build_juris_bruto.py",
+   "bytes": 18598,
+   "linhas": null,
+   "sha256": "9693a880bd577dd444263b8471623a53a3c0564c94ce3851b4980168eddef1b9"
+  },
+  {
+   "caminho": "pipeline/chunker.py",
+   "origem": "pipeline/chunker.py",
+   "bytes": 5807,
+   "linhas": null,
+   "sha256": "c6a21350f2839a9528cac266f82121d3526f4e8832d18ad38dd75d6481b3a1ed"
+  },
+  {
+   "caminho": "pipeline/coleta_carreiras.py",
+   "origem": "pipeline/coleta_carreiras.py",
+   "bytes": 7643,
+   "linhas": null,
+   "sha256": "7d2643b2c66f55b41d118531d76874fe2dd3b3c1d1846524a689ac24d73dcce9"
+  },
+  {
+   "caminho": "pipeline/coleta_stf_historico.py",
+   "origem": "pipeline/coleta_stf_historico.py",
+   "bytes": 5450,
+   "linhas": null,
+   "sha256": "83713b4c777823600b7a04a92237d9a1de341c686b37c6ba75da3c4f0c25198f"
+  },
+  {
+   "caminho": "pipeline/compare_ppl.py",
+   "origem": "pipeline/compare_ppl.py",
+   "bytes": 2978,
+   "linhas": null,
+   "sha256": "2575ecba1be4857c5b2a18fa854527c5b13799b44ea7ce13e80569db033eb686"
+  },
+  {
+   "caminho": "pipeline/completa_enunciados_carreiras.py",
+   "origem": "pipeline/completa_enunciados_carreiras.py",
+   "bytes": 6098,
+   "linhas": null,
+   "sha256": "3f34d51ea6a45f3b8db7bd0e2099e31a64f6a5a4019b71a428c0ca7c6b1ec878"
+  },
+  {
+   "caminho": "pipeline/config.py",
+   "origem": "pipeline/config.py",
+   "bytes": 4920,
+   "linhas": null,
+   "sha256": "d2ac78ca207e7fdce8a8d031d6174e25c85e39d1218461a3e0f35f54386965af"
+  },
+  {
+   "caminho": "pipeline/diagnostico_corpus.py",
+   "origem": "pipeline/diagnostico_corpus.py",
+   "bytes": 15718,
+   "linhas": null,
+   "sha256": "e79f9cf3bb2269893cabb3344af2b2ec5eac05f246c4218c255f92320a44308f"
+  },
+  {
+   "caminho": "pipeline/ec2_generate.py",
+   "origem": "pipeline/ec2_generate.py",
+   "bytes": 10060,
+   "linhas": null,
+   "sha256": "6d6dac40c954c1f97b6c4714c4381ed19639954ba803ef18c92f75b563dbdd6a"
+  },
+  {
+   "caminho": "pipeline/ec2_workflow.py",
+   "origem": "pipeline/ec2_workflow.py",
+   "bytes": 17929,
+   "linhas": null,
+   "sha256": "e17cac8246e1541ccea7ecef48c0a8bfee8558b6d02866ccb12f67cd3ba0f14c"
+  },
+  {
+   "caminho": "pipeline/enunciados_para_cpt.py",
+   "origem": "pipeline/enunciados_para_cpt.py",
+   "bytes": 3782,
+   "linhas": null,
+   "sha256": "aa7794eb2aaeec75a38a802f493540911928e9c98fdff3bd60c88bc93249ccae"
+  },
+  {
+   "caminho": "pipeline/expand_1fase_to_dissertativa.py",
+   "origem": "pipeline/expand_1fase_to_dissertativa.py",
+   "bytes": 4804,
+   "linhas": null,
+   "sha256": "e9eb79ca97aab77d7f4186c6911b172d56e7c1ee598ccde6ab396a1ff0da658f"
+  },
+  {
+   "caminho": "pipeline/expande_cascata.py",
+   "origem": "pipeline/expande_cascata.py",
+   "bytes": 10406,
+   "linhas": null,
+   "sha256": "f8b84c05c1398701d3cfe831d125438b21d5d03ed1d17653120a777acf866f05"
+  },
+  {
+   "caminho": "pipeline/extrai_enunciados.py",
+   "origem": "pipeline/extrai_enunciados.py",
+   "bytes": 6318,
+   "linhas": null,
+   "sha256": "1876e2cbc7c7ffc693ed6eba46a06a42b4f0d630a920fb89a41eda31ac370741"
+  },
+  {
+   "caminho": "pipeline/extrai_questoes_carreiras.py",
+   "origem": "pipeline/extrai_questoes_carreiras.py",
+   "bytes": 6440,
+   "linhas": null,
+   "sha256": "e15fe2df19033af85e3d87de94fed82e7909705f9c921478d0373c9ffb6007aa"
+  },
+  {
+   "caminho": "pipeline/gen_pecas_teacher.py",
+   "origem": "pipeline/gen_pecas_teacher.py",
+   "bytes": 6882,
+   "linhas": null,
+   "sha256": "f712644444229af322ed5558525632d6d9b12d27c27919319dd0b6ecb3b2c2f7"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers.py",
+   "origem": "pipeline/generate_sft_answers.py",
+   "bytes": 17967,
+   "linhas": null,
+   "sha256": "f5e13cc0326877571c733090026d0c978e8826845fcfc4337b0532c6d47cd7dc"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers_azure.py",
+   "origem": "pipeline/generate_sft_answers_azure.py",
+   "bytes": 5448,
+   "linhas": null,
+   "sha256": "8b953d86b4c18101d48d07b02895d63fddb31755e090ff73cbfe282f089e560d"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers_bedrock.py",
+   "origem": "pipeline/generate_sft_answers_bedrock.py",
+   "bytes": 15756,
+   "linhas": null,
+   "sha256": "b2080bc4d1992a74e61633044aebf82ee1e230387e6ca478e0802c93a3caf89f"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers_groq.py",
+   "origem": "pipeline/generate_sft_answers_groq.py",
+   "bytes": 7401,
+   "linhas": null,
+   "sha256": "7b8753a70e0b28f27814de4eba9ea53334c90c93f5b525cc6dc624fa6cf18e11"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers_together.py",
+   "origem": "pipeline/generate_sft_answers_together.py",
+   "bytes": 6632,
+   "linhas": null,
+   "sha256": "7146ab5a7bffd78d620bb9ec9884efa50670c9a3856ff425cf69ac381ac589eb"
+  },
+  {
+   "caminho": "pipeline/generate_sft_answers_v2.py",
+   "origem": "pipeline/generate_sft_answers_v2.py",
+   "bytes": 7268,
+   "linhas": null,
+   "sha256": "f45fe8600e5fc046b9c0c872cfe8d64e6ef0e28c1fd87970429de6d1a0383b6b"
+  },
+  {
+   "caminho": "pipeline/gera_cards_enunciados.py",
+   "origem": "pipeline/gera_cards_enunciados.py",
+   "bytes": 5644,
+   "linhas": null,
+   "sha256": "e9b8d270736d20309da228ed4194d81e7fa555cc3ab54db79929c3412e66abc0"
+  },
+  {
+   "caminho": "pipeline/indexa_fontes.py",
+   "origem": "pipeline/indexa_fontes.py",
+   "bytes": 7730,
+   "linhas": null,
+   "sha256": "374bfaca174b1e9ea1ec0f5b78bb2185372199fdef3330d866df32dd4322a6d9"
+  },
+  {
+   "caminho": "pipeline/limpa_sft.py",
+   "origem": "pipeline/limpa_sft.py",
+   "bytes": 4650,
+   "linhas": null,
+   "sha256": "ffc1958e7a5f57d82e7e4e1e1ae7ac628094b72a6312598d8979e50a6621d670"
+  },
+  {
+   "caminho": "pipeline/monta_benchmark_v2.py",
+   "origem": "pipeline/monta_benchmark_v2.py",
+   "bytes": 5799,
+   "linhas": null,
+   "sha256": "89fb188bf545af16c770ce3dd871b3d2b6749e47b7e52bbc3a8446ed00cf5e04"
+  },
+  {
+   "caminho": "pipeline/monta_blocos_ablacao.py",
+   "origem": "pipeline/monta_blocos_ablacao.py",
+   "bytes": 3682,
+   "linhas": null,
+   "sha256": "5afb49690adcb349210ee2f41ba2a2245b26b439a7a365fe05b652d681002bc4"
+  },
+  {
+   "caminho": "pipeline/monta_regime_tarefa.py",
+   "origem": "pipeline/monta_regime_tarefa.py",
+   "bytes": 4521,
+   "linhas": null,
+   "sha256": "883251363857574941f37ec3c5a901e041f81e6c1d76fc8be4809e11014e4f3e"
+  },
+  {
+   "caminho": "pipeline/monta_regimes.py",
+   "origem": "pipeline/monta_regimes.py",
+   "bytes": 5125,
+   "linhas": null,
+   "sha256": "3b67369d882a01f299f5963532f831dd235692d93561f1adbbfbbe0670737252"
+  },
+  {
+   "caminho": "pipeline/monta_sft_ablacao.py",
+   "origem": "pipeline/monta_sft_ablacao.py",
+   "bytes": 3285,
+   "linhas": null,
+   "sha256": "91fbfe5f7844c6ac7ef8695107cd239bcce4229b3d2f1801c694deef48a7f229"
+  },
+  {
+   "caminho": "pipeline/monta_sft_v4.py",
+   "origem": "pipeline/monta_sft_v4.py",
+   "bytes": 4242,
+   "linhas": null,
+   "sha256": "22079a0961cb4fe19b22e5d9dde791ec0c0fae57584371a2f15aebe637b701a5"
+  },
+  {
+   "caminho": "pipeline/normaliza_prompts_sft.py",
+   "origem": "pipeline/normaliza_prompts_sft.py",
+   "bytes": 3648,
+   "linhas": null,
+   "sha256": "a2597d143db257d1eeda967e375696483f81d03b3af5b921458ff5ec23484d1f"
+  },
+  {
+   "caminho": "pipeline/oab_para_cpt.py",
+   "origem": "pipeline/oab_para_cpt.py",
+   "bytes": 5614,
+   "linhas": null,
+   "sha256": "12187094cbbb290ad5a13cd630d0e6db5809b85230ed898d035146c3aacea0bf"
+  },
+  {
+   "caminho": "pipeline/orquestra.py",
+   "origem": "pipeline/orquestra.py",
+   "bytes": 7112,
+   "linhas": null,
+   "sha256": "e051b3e7660490a90b93ff6f202964c1cbd137545f2aab45e85cb9be2490f4f9"
+  },
+  {
+   "caminho": "pipeline/parse_irdr_nugep.py",
+   "origem": "pipeline/parse_irdr_nugep.py",
+   "bytes": 7869,
+   "linhas": null,
+   "sha256": "2906c38b82c702918e770b6b163e0e59a8f43d14dda1f6c2e70891bdd3b614b6"
+  },
+  {
+   "caminho": "pipeline/parse_oab_1fase.py",
+   "origem": "pipeline/parse_oab_1fase.py",
+   "bytes": 11454,
+   "linhas": null,
+   "sha256": "8abcb0a68e72a3561cef4f636d7f0ee7447c45faba9d146fdd2e7fcdb8f04060"
+  },
+  {
+   "caminho": "pipeline/parse_oab_pdfs.py",
+   "origem": "pipeline/parse_oab_pdfs.py",
+   "bytes": 32805,
+   "linhas": null,
+   "sha256": "af60f1a6c18d20a36dfff6305e2782c2cd8b6bf3126f4fc8347b8bb2812f4a17"
+  },
+  {
+   "caminho": "pipeline/preenche_lacunas.py",
+   "origem": "pipeline/preenche_lacunas.py",
+   "bytes": 6321,
+   "linhas": null,
+   "sha256": "c5df6d28555fc64dc56abe2f6197e4c9e5296131166acdd936929ca9ad9377ca"
+  },
+  {
+   "caminho": "pipeline/prepara_carreiras.py",
+   "origem": "pipeline/prepara_carreiras.py",
+   "bytes": 9353,
+   "linhas": null,
+   "sha256": "693763a8f3be27bc7b2197d7715ae5314317bc06ccaa11e3ae7f9b020cecaa9e"
+  },
+  {
+   "caminho": "pipeline/prepare_finetune_data.py",
+   "origem": "pipeline/prepare_finetune_data.py",
+   "bytes": 21198,
+   "linhas": null,
+   "sha256": "c3400dae160be742e4b840a744868996e377fdf045d8bc88cb367b7673a83c25"
+  },
+  {
+   "caminho": "pipeline/prepare_pretrain_data.py",
+   "origem": "pipeline/prepare_pretrain_data.py",
+   "bytes": 31283,
+   "linhas": null,
+   "sha256": "72ef49d2ea3c5ba748766c540551b19e051c905467b8247db6350d659e65f06f"
+  },
+  {
+   "caminho": "pipeline/prepare_pretrain_v2.py",
+   "origem": "pipeline/prepare_pretrain_v2.py",
+   "bytes": 12647,
+   "linhas": null,
+   "sha256": "6a65ba918f18a5422d79e13e9ec3a692510419843b6d818d02ea033f72cd2403"
+  },
+  {
+   "caminho": "pipeline/prepare_sft_data.py",
+   "origem": "pipeline/prepare_sft_data.py",
+   "bytes": 10754,
+   "linhas": null,
+   "sha256": "69387ed8984d1541d1911a63b47f6e77e957dbb444a687acbd4f29a40429ca01"
+  },
+  {
+   "caminho": "pipeline/prompt_padrao.py",
+   "origem": "pipeline/prompt_padrao.py",
+   "bytes": 4505,
+   "linhas": null,
+   "sha256": "5014f478673a9189790a0bbcd110cf4ba4c95eee4115b9e320cc4247bfef3db9"
+  },
+  {
+   "caminho": "pipeline/rechunk_v3.py",
+   "origem": "pipeline/rechunk_v3.py",
+   "bytes": 22890,
+   "linhas": null,
+   "sha256": "7ea1db7b1e7edc27526ebdabbf419cba01ed459de190e93f148a034e67c4113b"
+  },
+  {
+   "caminho": "pipeline/rechunk_v4.py",
+   "origem": "pipeline/rechunk_v4.py",
+   "bytes": 14721,
+   "linhas": null,
+   "sha256": "b1ac3f22417a86d6a96d5788c2cefb11e64e9c1f355d3fe1a188280c82936968"
+  },
+  {
+   "caminho": "pipeline/recoleta_normas.py",
+   "origem": "pipeline/recoleta_normas.py",
+   "bytes": 7188,
+   "linhas": null,
+   "sha256": "154500f81fca3c0ff08ecc674cc37c06e765b51eaa6367ff66cfc0ea2b8b71ca"
+  },
+  {
+   "caminho": "pipeline/reexpand_all_juris.py",
+   "origem": "pipeline/reexpand_all_juris.py",
+   "bytes": 3187,
+   "linhas": null,
+   "sha256": "d892d42f19bd7194485793a24d58568023d4f3c58bab9b05ba640d6edac352da"
+  },
+  {
+   "caminho": "pipeline/regen_sft_mistral.py",
+   "origem": "pipeline/regen_sft_mistral.py",
+   "bytes": 6869,
+   "linhas": null,
+   "sha256": "6fc9c1a0f0c06c69676ec8244036f28f1f6c724b711cd9ab8cb7c40f492b87d5"
+  },
+  {
+   "caminho": "pipeline/repara_criterios_benchmark.py",
+   "origem": "pipeline/repara_criterios_benchmark.py",
+   "bytes": 9471,
+   "linhas": null,
+   "sha256": "697394982555ea48410b01958ef1e625a470289918f745396252042aef9e1877"
+  },
+  {
+   "caminho": "pipeline/resume_sentencas_tjsp.py",
+   "origem": "pipeline/resume_sentencas_tjsp.py",
+   "bytes": 4171,
+   "linhas": null,
+   "sha256": "42c103abb7ebcad3d889a8409a38ae9fef2da2c89e7e23cd8cb60b279d4dce0d"
+  },
+  {
+   "caminho": "pipeline/retoma_inteiro_teor.py",
+   "origem": "pipeline/retoma_inteiro_teor.py",
+   "bytes": 2863,
+   "linhas": null,
+   "sha256": "46dc05a0d9598e940017778fa3adae9016be512f990614c2c1de933ebf6a4f33"
+  },
+  {
+   "caminho": "pipeline/roda_experimento.py",
+   "origem": "pipeline/roda_experimento.py",
+   "bytes": 9749,
+   "linhas": null,
+   "sha256": "d1a045a572a64057027132da69a6142751667167e12c757f693633f6ec57c77b"
+  },
+  {
+   "caminho": "pipeline/scraper_oab.py",
+   "origem": "pipeline/scraper_oab.py",
+   "bytes": 15538,
+   "linhas": null,
+   "sha256": "2a3634dec4a8daf7a62edd795244c376c454417176ed1d573022974575ec03b8"
+  },
+  {
+   "caminho": "pipeline/scraper_oab_1fase.py",
+   "origem": "pipeline/scraper_oab_1fase.py",
+   "bytes": 6508,
+   "linhas": null,
+   "sha256": "4d04cacbadd9d1e898c050ed5c1d74f077e033204e6565bd538179865b552b35"
+  },
+  {
+   "caminho": "pipeline/setup_bedrock.py",
+   "origem": "pipeline/setup_bedrock.py",
+   "bytes": 4499,
+   "linhas": null,
+   "sha256": "4c2882ade83037abf70e1957d3116cad0041e95e4ab86354d22177ae1523be81"
+  },
+  {
+   "caminho": "pipeline/verifica_fichas.py",
+   "origem": "pipeline/verifica_fichas.py",
+   "bytes": 9054,
+   "linhas": null,
+   "sha256": "aadc7d6d9d9535167102479235d2a5eb824a8e688e16f296fe4123867a89cc14"
+  },
+  {
+   "caminho": "pipeline/verifica_pronto.py",
+   "origem": "pipeline/verifica_pronto.py",
+   "bytes": 5765,
+   "linhas": null,
+   "sha256": "e57fba4619409553aea47cc9e19600a93ec0cbc3330bfe4d38a9340e2c360112"
+  },
+  {
+   "caminho": "pipeline/wait_and_launch_ec2.py",
+   "origem": "pipeline/wait_and_launch_ec2.py",
+   "bytes": 2583,
+   "linhas": null,
+   "sha256": "6443bec57e12c1ffa5e3b8660c8b150c2fc65728bacde70acbf7c4bf40e2500a"
+  },
+  {
+   "caminho": "pipeline/watchdog_treino.py",
+   "origem": "pipeline/watchdog_treino.py",
+   "bytes": 10785,
+   "linhas": null,
+   "sha256": "bd53a4be9cb86c6dd55eddd63902b25163cad94ff29f79788d176f3f5edb099c"
+  },
+  {
+   "caminho": "augmentation/connectors/__init__.py",
+   "origem": "augmentation/connectors/__init__.py",
+   "bytes": 56,
+   "linhas": null,
+   "sha256": "df0925c1ad092f47252777f9d110c4bcbfcc032023eb58923b4b304f692c61d9"
+  },
+  {
+   "caminho": "augmentation/connectors/brlaw_client.py",
+   "origem": "augmentation/connectors/brlaw_client.py",
+   "bytes": 4291,
+   "linhas": null,
+   "sha256": "912b9c5b563754fa53d8fbc1a98f4050d42b0b334f9beab2ee599993168f66c4"
+  },
+  {
+   "caminho": "augmentation/connectors/datajud.py",
+   "origem": "augmentation/connectors/datajud.py",
+   "bytes": 6303,
+   "linhas": null,
+   "sha256": "c399f483ab8f71bae54684842207f7c88957451035a4325d4da503351e788c2d"
+  },
+  {
+   "caminho": "augmentation/connectors/lexml.py",
+   "origem": "augmentation/connectors/lexml.py",
+   "bytes": 6818,
+   "linhas": null,
+   "sha256": "73ca85d82fe4ccd4b39b3466fd428d4c9aecf1a590bb1c7e158747e567fed925"
+  },
+  {
+   "caminho": "augmentation/connectors/senado_dados_abertos.py",
+   "origem": "augmentation/connectors/senado_dados_abertos.py",
+   "bytes": 7797,
+   "linhas": null,
+   "sha256": "514ac07f5737ff264575c200c7e23883ca1fe832c087971b4c062425fda96efb"
+  },
+  {
+   "caminho": "augmentation/connectors/stj_scraper.py",
+   "origem": "augmentation/connectors/stj_scraper.py",
+   "bytes": 7505,
+   "linhas": null,
+   "sha256": "32264a3eca4f85999ee488f9cd8bb0836f90d4eee7118e5797cee8081791f70c"
+  },
+  {
+   "caminho": "augmentation/crawlers/enunciados.py",
+   "origem": "augmentation/crawlers/enunciados.py",
+   "bytes": 9355,
+   "linhas": null,
+   "sha256": "92cc0e6e4c7892a1bc39a83d44dbb4cee6d504528d30570a3bf72c079aec8802"
+  },
+  {
+   "caminho": "augmentation/crawlers/irdr_iac.py",
+   "origem": "augmentation/crawlers/irdr_iac.py",
+   "bytes": 8016,
+   "linhas": null,
+   "sha256": "2c5b41487c90cd5f4fc4374fed2034d3b330c9d1d4fe4d995741291bc6f80a99"
+  },
+  {
+   "caminho": "augmentation/crawlers/revistas_ojs.py",
+   "origem": "augmentation/crawlers/revistas_ojs.py",
+   "bytes": 11092,
+   "linhas": null,
+   "sha256": "118853b82944aa32dccd2d093e3c7665f51031708b424f5c4d9423b817c921e4"
+  },
+  {
+   "caminho": "augmentation/crawlers/scielo_direito.py",
+   "origem": "augmentation/crawlers/scielo_direito.py",
+   "bytes": 7216,
+   "linhas": null,
+   "sha256": "b9f339a83215b1dfda42a6b85b8df1bf836b405ff75bad993633c34c4f3e39af"
+  },
+  {
+   "caminho": "augmentation/crawlers/stf_acordaos.py",
+   "origem": "augmentation/crawlers/stf_acordaos.py",
+   "bytes": 18020,
+   "linhas": null,
+   "sha256": "b4a167f153db42b0624b009ab46f0289146fc7098ab9a4639782abd2f7a8a7b0"
+  },
+  {
+   "caminho": "augmentation/crawlers/stj_acordaos.py",
+   "origem": "augmentation/crawlers/stj_acordaos.py",
+   "bytes": 11542,
+   "linhas": null,
+   "sha256": "f2554a7667c617252d549918ea8e8ccf0a04af79c1c06cecddea2c813d87812e"
+  },
+  {
+   "caminho": "augmentation/download_fontes.py",
+   "origem": "augmentation/download_fontes.py",
+   "bytes": 11594,
+   "linhas": null,
+   "sha256": "c31350cf6960445b511cd43b60e0d50367fab3d514381f62dada5f823d4db6d3"
+  },
+  {
+   "caminho": "augmentation/expand_casos.py",
+   "origem": "augmentation/expand_casos.py",
+   "bytes": 12667,
+   "linhas": null,
+   "sha256": "b1ebbe469e76ab67541871ee5300a7db9a859714e9bba56404d13e4457f9b4d7"
+  },
+  {
+   "caminho": "augmentation/expand_doutrina.py",
+   "origem": "augmentation/expand_doutrina.py",
+   "bytes": 8458,
+   "linhas": null,
+   "sha256": "1d6689ad257735ec0f8c8e4d9f7068bb73f9fbef08abd99a91564da9a354aae9"
+  },
+  {
+   "caminho": "augmentation/expand_fichas_consolidacao.py",
+   "origem": "augmentation/expand_fichas_consolidacao.py",
+   "bytes": 16871,
+   "linhas": null,
+   "sha256": "be43e5b26fe94357710aa38fe6bb80667ffc464d2b175f64252701a10e81c37a"
+  },
+  {
+   "caminho": "augmentation/expand_juris_rico.py",
+   "origem": "augmentation/expand_juris_rico.py",
+   "bytes": 9942,
+   "linhas": null,
+   "sha256": "bff934fbc78a4afc90328d40b74807e73b4a7cb85d72fd45bf2894269a2e8bea"
+  },
+  {
+   "caminho": "augmentation/expand_jurisprudencia.py",
+   "origem": "augmentation/expand_jurisprudencia.py",
+   "bytes": 14497,
+   "linhas": null,
+   "sha256": "b7981cb2d2a245139d54d7ba28420481d78f8684fccc17106fd684d66b5057dd"
+  },
+  {
+   "caminho": "augmentation/expand_normas.py",
+   "origem": "augmentation/expand_normas.py",
+   "bytes": 13972,
+   "linhas": null,
+   "sha256": "1f2ce128ff7fa7f0ae2d0f9d32254d5bb2b787e52f445dd72f586d8e776a3c95"
+  },
+  {
+   "caminho": "augmentation/expand_oab_1fase.py",
+   "origem": "augmentation/expand_oab_1fase.py",
+   "bytes": 9132,
+   "linhas": null,
+   "sha256": "bd727b1a86a62ea35db5698b458cf4b7f5a0d8be367861151ed423977d58f2eb"
+  },
+  {
+   "caminho": "augmentation/llm_client.py",
+   "origem": "augmentation/llm_client.py",
+   "bytes": 6851,
+   "linhas": null,
+   "sha256": "ae157ad797f15040bdcd5596a0c1df279c0e3aaa56f1e80a7373453510a94e0d"
+  },
+  {
+   "caminho": "augmentation/prompts.py",
+   "origem": "augmentation/prompts.py",
+   "bytes": 22142,
+   "linhas": null,
+   "sha256": "9d3d21ced6a33daea6a52bfdbeffa08be81b690844a2656b457015ce7b251f30"
+  },
+  {
+   "caminho": "augmentation/run_all_paralelo.py",
+   "origem": "augmentation/run_all_paralelo.py",
+   "bytes": 11535,
+   "linhas": null,
+   "sha256": "6d195e3cd671fa72b6093856d50b117db63f8cd2f313fdd1454552c2542a13f4"
+  },
+  {
+   "caminho": "augmentation/sanitize.py",
+   "origem": "augmentation/sanitize.py",
+   "bytes": 2487,
+   "linhas": null,
+   "sha256": "b7a4ece5f638b2996677f764987a17d22c25c2f06ae0ca16ad4a7d24da48a04e"
+  },
+  {
+   "caminho": "augmentation/verify.py",
+   "origem": "augmentation/verify.py",
+   "bytes": 12845,
+   "linhas": null,
+   "sha256": "50cfa686c2e75c3313b9d3e8450847e62299a5a42b9940dbc4278a1d76fb7579"
+  },
+  {
+   "caminho": "aws/build_ablacao_regime.py",
+   "origem": "aws/build_ablacao_regime.py",
+   "bytes": 9027,
+   "linhas": null,
+   "sha256": "d0c97ec1f57ece2ddeb96c5f1ae0388090857a82f4169dca64c1044de6292828"
+  },
+  {
+   "caminho": "aws/generate_answers_hf.py",
+   "origem": "aws/generate_answers_hf.py",
+   "bytes": 3689,
+   "linhas": null,
+   "sha256": "4075bd9fd9647e496810248650ea65caef1ce68d95380320c71d0197f6291da2"
+  },
+  {
+   "caminho": "aws/gera_remoto.py",
+   "origem": "aws/gera_remoto.py",
+   "bytes": 7008,
+   "linhas": null,
+   "sha256": "43334c9a29ef04b70eed2ed403fa769598cadb4ab46beb9264d601c92fa65b91"
+  },
+  {
+   "caminho": "aws/train_cpt_cuda.py",
+   "origem": "aws/train_cpt_cuda.py",
+   "bytes": 14075,
+   "linhas": null,
+   "sha256": "c57bdd9ea322c5e8cf9c3cb4a18940b87be7203fc6c00bd7eabe410c3014c18b"
+  },
+  {
+   "caminho": "aws/train_cpt_hf.py",
+   "origem": "aws/train_cpt_hf.py",
+   "bytes": 6206,
+   "linhas": null,
+   "sha256": "9f7593e68d218db961c207c102fa6e457a654deb1b311f83bfad750a687a9c35"
+  },
+  {
+   "caminho": "aws/train_sft_cuda.py",
+   "origem": "aws/train_sft_cuda.py",
+   "bytes": 7913,
+   "linhas": null,
+   "sha256": "ce8e6031de7bfc9e6a6068c58cdfddd602f667fbb29be4fb2d72b2f1a5498446"
+  },
+  {
+   "caminho": "aws/bootstrap_ablacao.sh",
+   "origem": "aws/bootstrap_ablacao.sh",
+   "bytes": 818,
+   "linhas": null,
+   "sha256": "fe4138d1f1f160c1f7fba2eba640f25f890ca3e820a6621a7b7a6a65a0000594"
+  },
+  {
+   "caminho": "aws/cadeia_ablacao_qwen.sh",
+   "origem": "aws/cadeia_ablacao_qwen.sh",
+   "bytes": 3447,
+   "linhas": null,
+   "sha256": "9a8dd2fd3ca223412626e66d3b238646f0c18292f2846a16ba8ba0437dd3eba2"
+  },
+  {
+   "caminho": "aws/cadeia_ablacao_tucano.sh",
+   "origem": "aws/cadeia_ablacao_tucano.sh",
+   "bytes": 2281,
+   "linhas": null,
+   "sha256": "71b19665221356e5923fd27204f33be54d039662559b14dc578c89956b2d1dda"
+  },
+  {
+   "caminho": "aws/cadeia_sft_ablacao.sh",
+   "origem": "aws/cadeia_sft_ablacao.sh",
+   "bytes": 3112,
+   "linhas": null,
+   "sha256": "05f20191c37aa6719ed3eedcdc39cf0227f194ad4427142d33f94f2a8b38af7d"
+  },
+  {
+   "caminho": "aws/gera_ctrl_ablacao.sh",
+   "origem": "aws/gera_ctrl_ablacao.sh",
+   "bytes": 1804,
+   "linhas": null,
+   "sha256": "acf62bf9085f8dd997d6c4804972e98aaa71b3efa2946d88063fffafdbecf59e"
+  },
+  {
+   "caminho": "aws/gera_sft_ablacao.sh",
+   "origem": "aws/gera_sft_ablacao.sh",
+   "bytes": 1736,
+   "linhas": null,
+   "sha256": "185444a9cd7994db21a264d15977ca36ebd8688f96377d7ad09497b99b94cdc8"
+  },
+  {
+   "caminho": "aws/insiste_q5.sh",
+   "origem": "aws/insiste_q5.sh",
+   "bytes": 1032,
+   "linhas": null,
+   "sha256": "cbee3433fe12d468e70cfdcfb7921537ff20516640a306cb9c03f0c10359d34c"
+  },
+  {
+   "caminho": "aws/queue_full.sh",
+   "origem": "aws/queue_full.sh",
+   "bytes": 2390,
+   "linhas": null,
+   "sha256": "ff49f1d867fb1181b4df9263d75b54b225dee814694ac6acf5d6282c5487a8f8"
+  },
+  {
+   "caminho": "aws/queue_h11.sh",
+   "origem": "aws/queue_h11.sh",
+   "bytes": 1052,
+   "linhas": null,
+   "sha256": "c3e155a2e607dc70eb305b29f408fe3ab20c0562281d150b0919b7692ce2890f"
+  },
+  {
+   "caminho": "aws/queue_h12_h14.sh",
+   "origem": "aws/queue_h12_h14.sh",
+   "bytes": 2127,
+   "linhas": null,
+   "sha256": "dddea6bc134fc4fbab8dd4a7b4b1bc890d6269bf0ee1d2ecf21ea9a22b9b8bb2"
+  },
+  {
+   "caminho": "aws/queue_h7_h8_h10.sh",
+   "origem": "aws/queue_h7_h8_h10.sh",
+   "bytes": 2645,
+   "linhas": null,
+   "sha256": "ae6ea0d671f3af75c3ca7d6204f2a704f984199f713a7c0fbf45513f5ba6ef20"
+  },
+  {
+   "caminho": "aws/queue_h8_h11.sh",
+   "origem": "aws/queue_h8_h11.sh",
+   "bytes": 1760,
+   "linhas": null,
+   "sha256": "f7e543c4c75eb7a2aebeeb6a6bbf38154486bb40c7f70cb483fd4ea1bf15f76d"
+  },
+  {
+   "caminho": "aws/queue_sft_v7_retry.sh",
+   "origem": "aws/queue_sft_v7_retry.sh",
+   "bytes": 1297,
+   "linhas": null,
+   "sha256": "ae462bf8711fcd8527cd9388b00b41ca8870132425d3f8a8fea73c3f1d4bb76c"
+  },
+  {
+   "caminho": "aws/roda_escada_qwen.sh",
+   "origem": "aws/roda_escada_qwen.sh",
+   "bytes": 2625,
+   "linhas": null,
+   "sha256": "c9685cf1a2d86067aac225a18b6140471559aeb319a4a5d856d472ea623700af"
+  },
+  {
+   "caminho": "aws/serve_vllm.sh",
+   "origem": "aws/serve_vllm.sh",
+   "bytes": 4814,
+   "linhas": null,
+   "sha256": "4f6c6d90312a5b83c358a97997164cf948c0d3c1b6332d936c8f9def771d74e6"
+  },
+  {
+   "caminho": "aws/setup_remote.sh",
+   "origem": "aws/setup_remote.sh",
+   "bytes": 1022,
+   "linhas": null,
+   "sha256": "e3688fe6e97909804f18a5ffef6e3d1ca0296d32f3138035b381386cc0cf910c"
+  },
+  {
+   "caminho": "aws/sobe_g6e.sh",
+   "origem": "aws/sobe_g6e.sh",
+   "bytes": 4287,
+   "linhas": null,
+   "sha256": "6e5804cfa4e99e450a1da7c67bf9ef3d21438050e6df2b0670dc7ef0108531eb"
+  },
+  {
+   "caminho": "aws/sobe_g6e_treino.sh",
+   "origem": "aws/sobe_g6e_treino.sh",
+   "bytes": 4796,
+   "linhas": null,
+   "sha256": "2fb8d51ca2881a6bb9bc405f6b7342f5b570b13c73a451d801da7f77511537c3"
+  },
+  {
+   "caminho": "aws/sobe_vllm_ablacao.sh",
+   "origem": "aws/sobe_vllm_ablacao.sh",
+   "bytes": 877,
+   "linhas": null,
+   "sha256": "795e045492192fa6a275cfae5733e704c666b3983544589cf1a46ec64a4528c6"
+  },
+  {
+   "caminho": "publicacao/artigo/monta_artigo.py",
+   "origem": "publicacao/artigo/monta_artigo.py",
+   "bytes": 3574,
+   "linhas": null,
+   "sha256": "fe263b481f4c7b9052c09ad7ddc9166d7abfc079e4524e25da1a86f0805f2c8d"
+  },
+  {
+   "caminho": "publicacao/artigo/tabelas.py",
+   "origem": "publicacao/artigo/tabelas.py",
+   "bytes": 6832,
+   "linhas": null,
+   "sha256": "8918654876c99487321199e63b18f71d18cab45bfc5e88e6210b8c162aadf016"
+  },
+  {
+   "caminho": "publicacao/artigo2/monta_artigo.py",
+   "origem": "publicacao/artigo2/monta_artigo.py",
+   "bytes": 3581,
+   "linhas": null,
+   "sha256": "3c5a6b83befa024d8bcde68e3dc0e90c6a082045a7c8204cf1a7e7acf64d4061"
+  },
+  {
+   "caminho": "publicacao/artigo2/tabelas.py",
+   "origem": "publicacao/artigo2/tabelas.py",
+   "bytes": 7202,
+   "linhas": null,
+   "sha256": "222c2bb89ecaacc6bfb4f4b2b45202db26ceb0cfed2e70ac18bd3e3a58fca3a9"
+  },
+  {
+   "caminho": "publicacao/artigo_en/monta_artigo.py",
+   "origem": "publicacao/artigo_en/monta_artigo.py",
+   "bytes": 3599,
+   "linhas": null,
+   "sha256": "083905f97a08f3a8769a5b907c17c8a2450a69f870c3ddb373b06201e2016680"
+  },
+  {
+   "caminho": "publicacao/artigo_en/tabelas.py",
+   "origem": "publicacao/artigo_en/tabelas.py",
+   "bytes": 7263,
+   "linhas": null,
+   "sha256": "a6f1c29963c2438ca82c39fce13c40b6b5c25c9a8ebf3ff4c501b5a9761d0a8e"
+  },
+  {
+   "caminho": "publicacao/jurix/para_tex.py",
+   "origem": "publicacao/jurix/para_tex.py",
+   "bytes": 8649,
+   "linhas": null,
+   "sha256": "2228db9d995072ccf8332074d7cbd5db53666acb31275614c16fbdc49c424e6b"
+  },
+  {
+   "caminho": "publicacao/jurix/para_tex_en.py",
+   "origem": "publicacao/jurix/para_tex_en.py",
+   "bytes": 8268,
+   "linhas": null,
+   "sha256": "a4e960843bd2db30ac135622bb34bd9f6a5e6f9a233a43466bc4514b8ff20a4c"
+  },
+  {
+   "caminho": "publicacao/monta_repo.py",
+   "origem": "publicacao/monta_repo.py",
+   "bytes": 4440,
+   "linhas": null,
+   "sha256": "d493153211e4520393da4d5fecdbc3c973a8e27acaf4cfccdeb856c4a7f5b34a"
+  },
+  {
+   "caminho": "publicacao/monta_standalone.py",
+   "origem": "publicacao/monta_standalone.py",
+   "bytes": 4553,
+   "linhas": null,
+   "sha256": "fcffa967d20816bc4ae6004785d0bdf3e07d57ba5e1f1c053b9965940b9c420c"
+  },
+  {
+   "caminho": "publicacao/para_pdf.py",
+   "origem": "publicacao/para_pdf.py",
+   "bytes": 1990,
+   "linhas": null,
+   "sha256": "9813840a5d0e7d36bd56817ad056db4345f61c9bd290494352cf60f6a71e8e60"
+  },
+  {
+   "caminho": "publicacao/tira_foto.py",
+   "origem": "publicacao/tira_foto.py",
+   "bytes": 1025,
+   "linhas": null,
+   "sha256": "93f6d2b0bbaad072d36a7e2dd339e496c8dc055a42982e6a0a11b4d39f4d975c"
+  },
+  {
+   "caminho": "dataset/confere_vazamento.py",
+   "origem": "dataset/confere_vazamento.py",
+   "bytes": 2002,
+   "linhas": null,
+   "sha256": "769b23ddc4ff6b2486d174b697d27bd5709243494c8f2e0dbfc1d9b205fbd404"
+  },
+  {
+   "caminho": "dataset/congela.py",
+   "origem": "dataset/congela.py",
+   "bytes": 3175,
+   "linhas": null,
+   "sha256": "d4014b3708fd9281c413e29f8d061002339d3e2fbb4bc8d7ba8a13daea79ebcd"
+  },
+  {
+   "caminho": "dataset/depositos.py",
+   "origem": "dataset/depositos.py",
+   "bytes": 7108,
+   "linhas": null,
+   "sha256": "40616ac86ab8e155624db0571850d135c7c44ecb52120cb382aefd8eb61aa8ea"
+  },
+  {
+   "caminho": "dataset/empacota.py",
+   "origem": "dataset/empacota.py",
+   "bytes": 6954,
+   "linhas": null,
+   "sha256": "94cf0d5027534034666f7dfaff7084fc158936e575c8e838e01883938cbb7ce9"
+  },
+  {
+   "caminho": "dataset/DATASHEET.md",
+   "origem": "dataset/DATASHEET.md",
+   "bytes": 10812,
+   "linhas": null,
+   "sha256": "74c909a351c351d14e489e59cedfe69925be36058de3a16e6b97dca19db37da5"
+  },
+  {
+   "caminho": "dataset/README.md",
+   "origem": "dataset/README.md",
+   "bytes": 2413,
+   "linhas": null,
+   "sha256": "45630c1be638491c6b98a04a785b9704fa0ad198e96983895860c5d56b358339"
+  },
+  {
+   "caminho": "explorador/app.py",
+   "origem": "explorador/app.py",
+   "bytes": 6375,
+   "linhas": null,
+   "sha256": "83276103a89ac90c7a986f2ce12a5a0754f2c59538fa239944a6cb2b2ae34591"
+  },
+  {
+   "caminho": "explorador/dados.py",
+   "origem": "explorador/dados.py",
+   "bytes": 4700,
+   "linhas": null,
+   "sha256": "15e7f9915c5f2552361644abf979171a49dd56f62d61a40fede284b166a52414"
+  },
+  {
+   "caminho": "revisao/app.py",
+   "origem": "revisao/app.py",
+   "bytes": 13248,
+   "linhas": null,
+   "sha256": "3af284e42fc8b3c1a95c4520faf6054be2472a4263603b277b5ed2287a3b283a"
+  },
+  {
+   "caminho": "revisao/blocos.py",
+   "origem": "revisao/blocos.py",
+   "bytes": 1785,
+   "linhas": null,
+   "sha256": "c7af34f2c5bb2a29a7b4cdb147f64e6dc2c2a05803de5fbfd0e9445d04947844"
+  },
+  {
+   "caminho": "revisao/ler.py",
+   "origem": "revisao/ler.py",
+   "bytes": 3416,
+   "linhas": null,
+   "sha256": "93111f42c6f32e4adeed69a38e4be9302f39ffe187b4d8aa87027c14bd777344"
+  },
+  {
+   "caminho": "revisao/versionar.py",
+   "origem": "revisao/versionar.py",
+   "bytes": 2978,
+   "linhas": null,
+   "sha256": "d49911c538b8abe230a1e76b747a6fc5f921f334ddadf6f43dc172f472541f21"
+  },
+  {
+   "caminho": "revisao/versoes.py",
+   "origem": "revisao/versoes.py",
+   "bytes": 3856,
+   "linhas": null,
+   "sha256": "d02fc7ad0c0449bb6f9ca99465f66051586dd4ae7786763fb1bc51b14f824e33"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+<h2><span class="num">4</span>Resultados</h2>
+
+<p>As tabelas seguintes apresentam as notas de cada condição, em percentual dos pontos que a banca distribui. Cada valor é a média de três sementes, e cada semente é a média de dez execuções. A coluna <b>bloco 0</b> é o modelo antes de qualquer ajuste fino, e a linha <b>sem pré-treino</b> é o controle: são os dois zeros contra os quais o resto se lê. Em destaque, o melhor bloco de cada linha. Os blocos têm I = 1.007 exemplos, II = 1.182, III = 1.681, IV = 2.687, V = 223 e VI = 2.909. A linha <i>sem pré-treino</i> só foi rodada nos seis blocos no Tucano2 3,7B; nos outros três modelos ela existe nos blocos I e VI.</p>
+
+<p>Quanto à dispersão, o desvio padrão entre as dez execuções de uma mesma semente fica entre 1,8 ponto percentual na discursiva e 3,0 na peça de mérito. Como cada célula é a média de três sementes, a dispersão relevante para comparar condições é a que resta entre sementes, de 0,4 a 0,9 ponto. O ruído de execução do protocolo, medido em trabalho anterior com 340 execuções acumuladas, é de 1,20 ponto: diferenças menores que isso não são distinguíveis de flutuação.</p>
+
+INSERIR_TABELA_1
+
+INSERIR_TABELA_2
+
+INSERIR_TABELA_3
+
+INSERIR_TABELA_4
+
+<h3><span class="num">4.1</span>O que cada regime de pré-treino rende, e em que tarefa</h3>
+
+<p>Compare a linha <i>sem pré-treino</i> com as duas que a seguem, no mesmo modelo e na mesma coluna. No Tucano2 3,7B, média dos seis blocos, a <b>questão discursiva</b> vai de 28,0% no controle para 28,1% com texto bruto e 29,7% com ficha. A <b>parte formal da peça</b> vai de 32,1% para 36,0% com texto bruto e 34,7% com ficha. A <b>parte de mérito</b> vai de 23,2% para 26,2% e 25,5%.</p>
+
+Dito de outro modo: os dois regimes de pré-treino melhoram a escrita de peça, e nenhum dos dois melhora a questão discursiva de forma apreciável. O texto bruto rende +3,9 pontos na parte formal e +0,02 na discursiva, o que na discursiva equivale a nada. A ficha rende +2,6 na parte formal e +1,7 na discursiva. O padrão se repete nos outros três modelos onde há controle. O tamanho do efeito depende do volume de supervisão que vem depois. No bloco I, com 1.007 exemplos, o pré-treino em texto bruto leva a parte formal do Tucano2 3,7B de 27,3% para 36,0%, um ganho de 8,8 pontos. No bloco VI, com 2.909, leva de 39,2% para 41,1%, um ganho de 1,9. O ganho do pré-treino encolhe conforme o ajuste fino cresce.</p>
+
+<p>A coluna <b>bloco 0</b> mostra que esse ganho é recuperação de um déficit, e não acréscimo sobre um empate. Antes de qualquer exemplo de tarefa, o pré-treino em <b>texto bruto</b> deixa o modelo pior do que ele estava: no Tucano2 3,7B a parte formal cai de 21,9% para 6,2% e a de mérito de 23,3% para 11,0%, e a queda se repete nos quatro modelos, com média de 9,4 pontos na forma e 10,1 no mérito. O pré-treino em <b>ficha</b> cobra bem menos, 3,1 e 2,4 pontos, e é o único dos dois que melhora a discursiva nesse estágio, com 2,8 pontos de média. Um modelo entregue no estado de bloco 0 com texto bruto seria pior do que o modelo sem tratamento nenhum; é o ajuste fino que recupera o déficit e, a partir dele, ultrapassa o controle.</p>
+
+<h3><span class="num">4.2</span>Os dois regimes de corpus não são substitutos</h3>
+
+<p>Compare agora as duas últimas sublinhas de cada modelo. Na discursiva a ficha vence o texto bruto em quase toda coluna dos quatro modelos; na parte formal da peça ocorre o inverso, e o texto bruto vence em praticamente todas. Nos dois modelos Qwen3 os dois recortes da peça têm <b>sinais opostos</b>: a ficha ganha no mérito e perde na forma, e a nota agregada da peça, sendo 85,1% mérito, registra só o sinal do mérito.</p>
+
+A explicação mais direta é composicional: o acórdão integral <i>é</i> um documento processual e carrega endereçamento, qualificação e fecho, ao passo que a ficha é um recorte de dispositivo acompanhado de pergunta e resposta. Cada regime ensina o que o seu material contém. A divisão de trabalho foi quantificada no nível do critério, no Tucano2 3,7B. A correlação entre o ganho de um regime e o do outro, critério a critério, é de <b>ρ = +0,30</b> (Spearman; Pearson r = +0,37), mais perto de zero do que de um. Dos critérios melhorados por pelo menos um regime, <b>218 são exclusivos de um deles contra 103 compartilhados</b>. Tomando critério a critério a melhor das duas taxas, obtém-se um limite superior para a união dos dois corpora: 38,96% na parte formal contra 34,04% do melhor braço isolado, 25,04% contra 22,49% no mérito e 22,76% contra 20,55% na discursiva, isto é, 4,92, 2,55 e 2,21 pontos acima. Nenhuma das 180 condições foi treinada em corpus misturado, de modo que esse valor é um alvo e não um resultado.</p>
+
+<h3><span class="num">4.3</span>Composição do bloco importa mais que o tamanho dele</h3>
+
+<p>Os blocos não formam uma escada de volume, e isso muda o que os contrastes entre eles medem. O contraste <b>I contra II</b> não é de volume: os dois blocos são disjuntos e têm tamanho parecido, 1.007 contra 1.182, de modo que ele compara <i>substituir</i> material oficial da OAB por material gerado. O resultado é fraco em toda tarefa, com ganho médio de 0,03 ponto negativo na parte formal e um braço significativo de nove; trocar o oficial pelo gerado não compra nada. O contraste <b>II contra III</b> acrescenta 525 exemplos de peça sintética em cascata e é um acréscimo genuíno: nulo na discursiva, com dois braços significativos de nove e ganho médio de 0,02, e significativo em nove de nove na parte formal, com 4,44 de média. O contraste <b>I contra IV</b> acrescenta ao material oficial todo o material gerado, 1.769 exemplos, e é o de maior efeito, com oito braços de nove na parte formal e 5,90 de ganho médio, contra um braço de nove na discursiva e 0,31. Já <b>IV contra VI</b>, que acrescenta os 223 exemplos de concurso de carreira, é nulo em toda tarefa.</p>
+
+<p>Nenhum dos quatro contrastes isola volume de composição, porque cada acréscimo traz material de um tipo que não estava lá. O que se sustenta é que acrescentar material gerado ao oficial rende, e rende na peça; que substituir o oficial pelo gerado não rende; e que o último acréscimo, de material de outro gênero, não rende em lugar nenhum. A amplitude entre blocos confirma o mesmo por outro caminho: a distância entre a melhor e a pior coluna de cada linha vai de 4,3 a 6,2 pontos na discursiva e de 18,5 a 28,8 na parte formal da peça. O que os blocos ensinam de diferente é sobretudo forma de documento.</p>
+
+<h3><span class="num">4.4</span>O bloco de carreiras ensina o esqueleto errado</h3>
+
+<p>O bloco V contém 223 exemplos de concursos de carreira jurídica e nenhum material da OAB. Nas Tabelas 2 e 3 ele é a pior coluna de quase toda linha, e o déficit se concentra na parte formal. A hipótese é de gênero e faz uma previsão verificável: uma sentença não tem endereçamento, porque o juiz não se dirige a ninguém, e um parecer também não. A previsão se confirma com margem larga, pois o bloco V derruba os critérios de endereçamento entre 19,4 e 26,0 pontos percentuais nos quatro modelos, sem exceção, e a qualificação das partes entre 15,9 e 24,7.</p>
+
+<h3><span class="num">4.5</span>Comparação com o modelo-base</h3>
+
+<p>As tabelas trazem o ponto de partida interno do experimento. Resta compará-las com o modelo como ele foi publicado, sem pré-treino e sem ajuste fino. Na <b>peça</b> o pipeline funciona nos quatro modelos, e o ganho se concentra no recorte formal: de 17,5 a 22,9 pontos percentuais, contra 5,6 a 11,8 no mérito. Na <b>discursiva</b> ele funciona nos dois Tucano2, com 3,9 e 6,8 pontos, e falha nos dois Qwen3: no 8B apenas uma das doze condições treinadas supera o base, e no 14B nenhuma supera, ficando a melhor delas 4,0 pontos abaixo. A leitura não é de degradação, e sim de <b>realocação</b>. O pipeline inteiro ensina a forma do documento processual, e o que ele cobra é a capacidade de responder pergunta curta, capacidade que os Qwen3 já possuíam em nível alto, chegando com 29,5% e 35,5% na discursiva, acima do melhor Tucano2 treinado. Numa nota que agregasse os dois gêneros, essa troca apareceria como perda pura, porque a discursiva é 84 das 105 questões.</p>
+
+<h3><span class="num">4.6</span>Por área do direito</h3>
+
+<p>A Tabela 5 fixa o Tucano2 3,7B e abre as sete áreas. O padrão da Seção 4.1 se mantém em todas: os dois regimes de pré-treino rendem na peça e nenhum dos dois rende na discursiva. Vale o registro sobre um defeito de coleta descrito na ficha do conjunto: o Código Civil entrou no corpus com 57 de 2.046 artigos e o Código Penal comum não entrou, enquanto as outras cinco áreas têm o seu diploma fundamental com cobertura entre 89% e 100%. Se o valor do pré-treino viesse de ler o texto da lei, o ganho deveria ser menor nessas duas áreas. Não é: Direito Penal tem o maior ganho de todas na discursiva. O que se sustenta é a negativa, e não uma afirmação sobre o mecanismo.</p>

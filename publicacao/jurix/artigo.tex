@@ -1,0 +1,219 @@
+\documentclass{IOS-Book-Article}
+\usepackage{mathptmx}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+% A classe do IOS traz rótulo de palavras-chave em inglês, alemão, francês e espanhol. Sem
+% a versão em português o rótulo sai vazio e só o separador aparece, como um ponto solto.
+% O `@` no nome exige \makeatletter: sem ele o LaTeX lê \keywordsname seguido de `@brazil`
+% e reclama que o comando já existe.
+\makeatletter
+\newcommand{\keywordsname@brazil}{Palavras-chave}
+\makeatother
+\begin{document}
+\begin{frontmatter}
+\title{Corpus sintético na adaptação de modelos de linguagem ao direito brasileiro}
+\author[A]{\fnms{Eduardo} \snm{Pacheco}}
+and
+\author[A]{\fnms{Cibele Maria} \snm{Russo}}
+\runningauthor{E. Pacheco e C. M. Russo}
+\address[A]{Instituto de Ciências Matemáticas e de Computação, Universidade de São Paulo}
+\begin{abstract}
+A receita corrente para adaptar um modelo de linguagem a um domínio técnico tem duas fases: expor o modelo a texto do domínio por predição do próximo token e, em seguida, a exemplos de tarefa resolvida. A receita não especifica \emph{qual} texto, \emph{em que forma} ele deve entrar, nem \emph{quanta} supervisão basta. Este trabalho mede essas três coisas ao mesmo tempo, num domínio em que existe gabarito itemizado e público: a segunda fase do Exame de Ordem da OAB, o concurso de ingresso na carreira de advogado no Brasil. Construímos dois corpora de pré-treino continuado pareados documento a documento, um de texto jurídico bruto e outro em que o mesmo material foi reestruturado em fichas com camadas geradas por um modelo-professor. Combinamos esses dois regimes, mais um regime de controle sem pré-treino, com seis conjuntos de ajuste fino de composição distinta e com quatro modelos-base de 1,5 a 14 bilhões de parâmetros, totalizando 180 condições treinadas com LoRA. Cada condição foi avaliada em 105 questões reais contra 940 critérios do espelho oficial das bancas, em dez execuções independentes, com julgamento por modelo de linguagem calibrado contra anotação humana. Obtivemos três resultados. Primeiro, o efeito de cada decisão depende do gênero textual da tarefa e se anula quando os gêneros são agregados: o pré-treino continuado rende entre +2,6 e +3,9 pontos percentuais na redação de peça processual e praticamente nada na questão discursiva. Segundo, os dois regimes de corpus \textbf{não são substitutos}: o texto bruto ensina a forma do documento e o corpus estruturado ensina a responder pergunta, com correlação de apenas $\rho$ = 0,30 entre os ganhos critério a critério. Terceiro, o pré-treino em texto bruto \textbf{degrada} o modelo antes do ajuste fino, em média 9,8 pontos percentuais na peça, de modo que o ganho observado é recuperação de déficit seguida de ultrapassagem, e não acréscimo sobre um empate.
+\end{abstract}
+\begin{keyword}
+adaptação de domínio \textperiodcentered{} direito brasileiro \textperiodcentered{} avaliação por modelo de linguagem \textperiodcentered{} LoRA
+\end{keyword}
+\end{frontmatter}
+
+
+\section{Introdução}
+Adaptar um modelo de linguagem de propósito geral a um domínio técnico é hoje um procedimento de receita conhecida. Toma-se um modelo pré-treinado, expõe-se ele a texto do domínio em regime de predição do próximo token, depois a exemplos de tarefa resolvida, e mede-se o resultado. A literatura repete essa receita em medicina, finanças e direito, e os relatos convergem para a mesma conclusão qualitativa: adaptar ajuda.
+Uma coisa que normalmente essa receita não diz é \textbf{qual texto}. Em direito brasileiro há pelo menos quatro categorias distintas de textos jurídicos candidatas a compor um corpus de treinamento, e elas são bastante diferentes entre si. Texto de lei é normativo e compacto, de modo a enumerar normas sem uma preocupação explicativa. A jurisprudência é argumentativa e repetitiva. Já a doutrina é explicativa. Provas em exames profissionais de ingresso em carreiras jurídicas cobram dos candidatos que escrevam textos que correspondem à habilidade esperada de operadores do direito. Não é óbvio que o modelo aprenda a mesma coisa de cada categoria de texto, nem que precise de todas.
+A segunda coisa que a receita não diz é \textbf{em que forma}. Um artigo de lei pode entrar no treino exatamente como está publicado, de forma bruta. Ou pode ser remodelado de modo a se buscar maximizar a associação com conceitos juridicamente relevantes, formando uma espécie de "ficha de estudo", como fazem estudantes de direito. Assim, em vez de o artigo aparecer sequencialmente ao lado de outros artigos da mesma lei, ganha foco próprio, e vem acompanhado de explicação, síntese, efeito prático, relação com outros artigos e pares de pergunta e resposta gerados a partir dele. A segunda forma tem custo: é preciso gerar esse material com outro modelo de linguagem, e ele ocupa mais espaço no orçamento de tokens. Por um lado, enumerar os artigos de leis de forma bruta permite incluir mais artigos e leis, dado seu formato compacto. De outro, gastar energia com o estabelecimento dessas conexões pode beneficiar capacidades dos modelos em tarefas jurídicas. A pergunta é se e em quais circunstâncias cada formato compensa.
+A terceira é se as respostas às duas primeiras \textbf{dependem da escala}. Um resultado obtido num modelo de 1,5 bilhão de parâmetros só é útil se ainda valer no de 14 bilhões, e há razão teórica para desconfiar que não valha: um modelo maior já viu mais português jurídico no seu pré-treino original, de modo que material adicional pode ser redundante para ele e informação nova para o pequeno.
+Este trabalho responde às três perguntas com um desenho fatorial. A contribuição não está em mostrar que adaptar ajuda, o que já é sabido, mas em decompor onde o ganho mora. A segunda fase do Exame de Ordem cobra duas tarefas: a) responder questões discursivas e b) redigir uma peça processual; e elas respondem em sentidos opostos a quase todas as decisões testadas. Uma nota que some as duas mede a diferença entre um efeito positivo e um negativo, e não o efeito de coisa alguma.
+Os dois corpora de pré-treino, os seis blocos de ajuste fino, os julgamentos das 180 condições e as respostas geradas por elas estão depositados com identificador persistente e soma de verificação por arquivo, acompanhados de uma ficha de conjunto que descreve a coleta e os defeitos conhecidos.
+
+\section{Trabalhos relacionados}
+A prática de continuar o pré-treino de um modelo em texto de domínio antes do ajuste fino foi sistematizada por Gururangan et al. [1], que mostraram ganho consistente em quatro domínios e propuseram também a adaptação a tarefa. Trabalhos subsequentes aplicaram o procedimento ao direito: Chalkidis et al. [2] treinaram codificadores em corpora jurídicos anglófonos e Colombo et al. [3] estenderam a receita a modelos generativos. Em todos esses casos o corpus de domínio entra na forma em que foi coletado, e a questão de \emph{reestruturá-lo} antes do treino não é colocada.
+Para o português jurídico há três conjuntos de avaliação diretamente relevantes, todos construídos sobre exames reais. O \textbf{OABench} [4] usa a primeira fase do Exame de Ordem, de múltipla escolha, o que dá correção objetiva ao custo de não avaliar geração de texto. O \textbf{MagisBench} [5] passa a tarefas discursivas do domínio judicial e introduz a correção por modelo de linguagem. O \textbf{Rabula} [6] estabelece as tarefas da segunda fase do Exame de Ordem sobre as quais este trabalho se apoia, com padrão-ouro de 940 anotações binárias por três juristas e o procedimento de seleção de juiz automático por concordância de Cohen. Este trabalho herda de [6] o conjunto de avaliação e o pipeline de correção, e não os modifica.
+A avaliação de resposta longa por modelo de linguagem [7] acomoda o formato da prova ao custo de introduzir a questão de quanto o juiz concorda com o especialista humano. Tratamos essa questão num artigo companheiro [8]; aqui os juízes entram já fixados e calibrados, e não são objeto de estudo. Quanto à decomposição da peça processual em exigência de forma e exigência de mérito, ela não aparece na literatura de adaptação de domínio que levantamos, e é dela que vem a maior parte dos efeitos medidos adiante.
+
+\section{Materiais e métodos}
+Quatro modelos-base entram no experimento, em duas famílias e quatro escalas: Tucano2 de 1,5 e 3,7 bilhões de parâmetros, treinados com foco em português, e Qwen3 de 8,2 e 14,8 bilhões, multilíngues. A diferença de família é deliberada, porque permite distinguir um efeito de escala de um efeito de exposição prévia ao português jurídico. Uma condição de ajuste fino custa entre 4,8 e 28 horas de GPU NVIDIA A10G conforme o tamanho.
+\subsection{O corpus de pré-treino continuado: o par bruto e ficha sintética}
+O eixo central do desenho é a forma do corpus de pré-treino. Construímos dois corpora a partir do mesmo acervo de documentos coletados de fontes oficiais: normas federais e estaduais, acórdãos e enunciados de súmula de tribunais superiores e do Tribunal de Justiça de São Paulo. Os dois são pareados documento a documento: o mesmo acórdão que entra num entra no outro.
+No regime de \textbf{texto bruto} o documento entra como foi coletado e é cortado por tamanho quando excede a janela de contexto. O corte é cego: cai onde calha, inclusive no meio de uma frase. São 39.856 documentos e 50,58 milhões de tokens no tokenizador do Tucano2. A composição é dominada por decisão judicial: 78,3\% dos tokens são acórdãos integrais, 9,1\% jurisprudência consolidada (súmulas, teses de repercussão geral e de recurso repetitivo), 8,9\% texto de norma e 3,7\% enunciados.
+No regime \textbf{estruturado} o mesmo documento é convertido numa \textbf{ficha} antes de entrar. A ficha preserva o texto original intacto num campo próprio e acrescenta seis camadas geradas por um modelo-professor: síntese, explicação, efeito prático, dispositivos relacionados, princípios envolvidos e pares de pergunta e resposta derivados do conteúdo. Cada camada é um nó com identificador e relação explícita de filiação, o que permite fatiar a ficha sem perder a âncora: o corte respeita os nós, e cada pedaço carrega o cabeçalho de identificação mais um subconjunto coerente das camadas. São 41.900 documentos e 59,43 milhões de tokens.
+A expansão inverte a composição, e isso é uma limitação do par. Uma norma tem poucos tokens no original e muitos depois de expandida; um acórdão integral já é longo e a expansão acrescenta proporcionalmente menos. O braço estruturado fica com 36,3\% de norma e 35,5\% de caso julgado, contra 8,9\% e 78,3\% do bruto. Os dois partem do mesmo acervo, mas não chegam à GPU com a mesma mistura de categoria, de modo que parte do efeito atribuído à forma pode ser mistura.
+O orçamento de tokens é o do braço menor, contado com o tokenizador de cada família. O braço bruto roda uma época exata sobre o arquivo inteiro; o estruturado é truncado até casar o mesmo número de tokens, o que dá 0,851 época no Tucano2 e 0,877 no Qwen3. Nenhum braço repete documento.
+\subsection{O corpus de ajuste fino: o que há em cada bloco}
+O corpus de ajuste fino é composto por pares de enunciado e resposta, e os exemplos variam em dois eixos independentes. O primeiro é a origem do enunciado: ele pode ser uma questão real que caiu na prova, ou uma questão sintética escrita por um modelo a partir de um caso real usado como semente e, no caso extremo, uma questão sintética escrita a partir de outra questão sintética, a dois saltos do material oficial. O segundo é a âncora da resposta: ela pode seguir o espelho oficial da banca, com os critérios e a pontuação publicados, ou ser livre, com uma rubrica gerada junto pelo próprio modelo-professor.
+Cinco conjuntos concentram 2.630 dos 2.909 exemplos e são os que dão identidade aos blocos:
+\begin{itemize}
+\item \textbf{D1} \textperiodcentered{} 691 questões \textbf{discursivas reais} da segunda fase do Exame de Ordem, com o espelho oficial da banca como resposta. Enunciado a zero salto, âncora oficial. Resposta mediana de 376 tokens.
+\item \textbf{D5} \textperiodcentered{} 181 \textbf{peças reais} da segunda fase, também com espelho oficial. Resposta mediana de 1.579 tokens, o conjunto mais longo do corpus.
+\item \textbf{D3} \textperiodcentered{} 558 questões da \textbf{primeira fase} do Exame de Ordem, de múltipla escolha, convertidas em pergunta aberta. Enunciado a um salto, e a âncora é o gabarito objetivo, que diz qual alternativa está certa mas não desenvolve o raciocínio.
+\item \textbf{D2} \textperiodcentered{} 686 \textbf{peças sintéticas}, escritas a partir de um caso real da segunda fase usado como semente. Enunciado a um salto, âncora livre.
+\item \textbf{D4} \textperiodcentered{} 514 \textbf{peças sintéticas em cascata}, escritas a partir de um enunciado do D3. Enunciado a dois saltos, âncora livre.
+\end{itemize}
+Os 279 exemplos restantes vêm de dezenove conjuntos pequenos de \textbf{concursos de carreira jurídica}: peças, pareceres, sentenças e dissertações de bancas diversas, da Advocacia-Geral da União e da magistratura do Tribunal de Justiça de São Paulo.
+Os seis blocos combinam esses conjuntos, e eles não formam uma escada de volume:
+\begin{itemize}
+\item \textbf{I} \textperiodcentered{} 1.007 exemplos, só material oficial da OAB com espelho da banca (D1 e D5).
+\item \textbf{II} \textperiodcentered{} 1.182, só material gerado ou convertido (D2 e D3). Não contém o bloco I.
+\item \textbf{III} \textperiodcentered{} 1.681, o bloco II mais o material a dois saltos (D4).
+\item \textbf{IV} \textperiodcentered{} 2.687, o bloco I mais o bloco III, isto é, toda a OAB, oficial e gerada.
+\item \textbf{V} \textperiodcentered{} 223, só concursos de carreira, nenhum material da OAB.
+\item \textbf{VI} \textperiodcentered{} 2.909, o bloco IV mais o bloco V: o corpus completo.
+\end{itemize}
+O aninhamento foi verificado comparando os exemplos por conteúdo, e não pelo rótulo, porque um exemplo gerado herda o identificador do original que lhe serviu de semente. II $\subset$ III $\subset$ IV $\subset$ VI e I $\subset$ IV, mas \textbf{I e II são disjuntos}, sem um único exemplo em comum, assim como I e III.
+\subsection{Desenho fatorial e os três pontos de partida}
+O experimento cruza três fatores: o regime de pré-treino, com três níveis, I) texto bruto, II) estruturado e III) nenhum, que pula a fase inteira e serve de controle; o bloco de ajuste fino, com seis níveis; e o modelo-base, com quatro níveis. Cada combinação foi treinada com três sementes aleatórias distintas, totalizando 180 condições.
+O desenho tem três pontos de partida sem tratamento, e cada um responde a uma pergunta diferente. O \textbf{modelo-base} é o modelo como foi publicado, sem pré-treino e sem ajuste fino; compará-lo com uma condição treinada mede o pipeline inteiro. O \textbf{bloco 0} é o modelo depois do pré-treino continuado e antes de qualquer exemplo de tarefa, e existe em duas versões, uma por regime de corpus (bruto ou as fichas geradas); compará-lo com um bloco de ajuste fino mede o ajuste fino. O regime \textbf{nenhum} é o modelo que pulou o pré-treino e foi direto ao ajuste fino; compará-lo com o mesmo bloco nos outros regimes mede o pré-treino. Note-se que o regime \texttt{nenhum} não é o mesmo modelo em todos os blocos, porque ele remove o pré-treino e não o ajuste fino; o único ponto de partida constante ao longo dos blocos é o bloco 0.
+Todas as 180 condições usam o mesmo protocolo: adaptação de baixo posto (LoRA) [9] com posto 32 e fator 64, aplicada às últimas 24 camadas e a sete módulos de projeção; taxa de aprendizado de 1$\times$10$^{-}$$^{5}$ com decaimento por cosseno; lote efetivo de 16; janela de 3.072 tokens; e mascaramento do enunciado, de modo que a perda é calculada apenas sobre a resposta. O número de passos não é fixo: é calculado para que todo bloco receba exatamente três épocas, o que torna o volume de exemplos, e não o número de atualizações, a variável manipulada.
+\subsection{Avaliação}
+A avaliação segue a metodologia publicada em trabalho anterior [6] e se baseia em \emph{LLM-as-a-judge} de modelos bem classificados nas tarefas de geração de peça e de resposta a questões discursivas, a partir da comparação de diferentes juízes automáticos com o juízo humano sobre o cumprimento ou não das respostas dadas por um modelo, frente aos gabaritos oficiais do exame de segunda fase da OAB.
+O conjunto de avaliação é fixo e nunca foi tocado pelo treino: são \textbf{105 questões} da segunda fase, sendo 84 discursivas e 21 casos práticos que pedem uma peça processual. Os exames de onde elas vêm foram excluídos de todo o corpus de treino, o que verificamos por identificador de exame em cada bloco.
+Cada questão é corrigida contra o espelho oficial da banca, item a item. São \textbf{940 critérios binários} no total, cada um com a pontuação que a banca lhe atribui. A nota de uma condição é a média, por execução, da fração de pontos obtida em cada questão e não a proporção simples de critérios atendidos, que daria mais peso às questões com espelho mais longo. Cada condição é gerada dez vezes de forma independente, a temperatura 0,1.
+São dois juízes, um por gênero, escolhidos e fixados antes de qualquer medição das 180 condições: \textbf{Kimi K2.5} para a questão discursiva, com concordância de Cohen de \textbf{$\kappa$ = 0,799} contra o padrão-ouro humano, e \textbf{GPT-OSS 120B} para a peça, com \textbf{$\kappa$ = 0,754}. Para referência, a concordância entre os três anotadores humanos é de 0,789 na discursiva e 0,763 na peça.
+O espelho da banca dá um título a cada critério da peça: Endereçamento, Qualificação das partes, Fechamento, Fundamentação, Pedidos. Agrupamos esses títulos em duas classes: os de \textbf{forma}, que cobram o esqueleto do documento e somam 148 critérios e 14,9\% dos pontos, e os de \textbf{mérito}, que cobram a tese jurídica e somam 413 critérios e 85,1\%. Os títulos são da banca; o agrupamento em duas classes é nosso, porque a banca nomeia a exigência sem classificá-la. Reportamos peça formal, peça mérito e peça agregada sempre que a peça é medida.
+Condições são comparadas por teste de Wilcoxon pareado por questão, com as três sementes empilhadas. Onde o número de comparações é grande, aplicam-se as correções de Bonferroni e de Benjamini-Hochberg [10].
+
+\section{Resultados}
+As tabelas seguintes apresentam as notas de cada condição, em percentual dos pontos que a banca distribui. Cada valor é a média de três sementes, e cada semente é a média de dez execuções. A coluna \textbf{bloco 0} é o modelo antes de qualquer ajuste fino, e a linha \textbf{sem pré-treino} é o controle: são os dois zeros contra os quais o resto se lê. Em destaque, o melhor bloco de cada linha. Os blocos têm I = 1.007 exemplos, II = 1.182, III = 1.681, IV = 2.687, V = 223 e VI = 2.909. A linha \emph{sem pré-treino} só foi rodada nos seis blocos no Tucano2 3,7B; nos outros três modelos ela existe nos blocos I e VI.
+Quanto à dispersão, o desvio padrão entre as dez execuções de uma mesma semente fica entre 1,8 ponto percentual na discursiva e 3,0 na peça de mérito. Como cada célula é a média de três sementes, a dispersão relevante para comparar condições é a que resta entre sementes, de 0,4 a 0,9 ponto. O ruído de execução do protocolo, medido em trabalho anterior com 340 execuções acumuladas, é de 1,20 ponto: diferenças menores que isso não são distinguíveis de flutuação.
+\begin{table}[!ht]
+\centering
+\caption{Desempenho dos modelos na tarefa de questão discursiva.}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrrrr}
+\hline
+\textbf{Modelo} & \textbf{Pré-treino} & \textbf{bloco 0} & \textbf{I} & \textbf{II} & \textbf{III} & \textbf{IV} & \textbf{V} & \textbf{VI} \\
+\hline
+\multirow{3}{*}{Tucano 1,5B} & sem pré-treino & 13,8\% & 14,7\% & -- & -- & -- & -- & 14,3\% \\
+ & texto bruto & 11,1\% & 15,5\% & 15,7\% & 16,3\% & 14,9\% & 13,4\% & 13,9\% \\
+ & ficha & 17,7\% & 15,8\% & 16,5\% & 17,7\% & 15,2\% & 15,5\% & 16,0\% \\
+\multirow{3}{*}{Tucano 3,7B} & sem pré-treino & 25,0\% & 26,8\% & 29,5\% & 29,4\% & 27,7\% & 26,5\% & 28,3\% \\
+ & texto bruto & 22,1\% & 26,5\% & 29,9\% & 29,5\% & 28,4\% & 26,4\% & 27,8\% \\
+ & ficha & 31,0\% & 28,1\% & 31,2\% & 31,8\% & 29,1\% & 29,7\% & 28,6\% \\
+\multirow{3}{*}{Qwen3 8B} & sem pré-treino & 29,5\% & 26,8\% & -- & -- & -- & -- & 27,3\% \\
+ & texto bruto & 28,2\% & 24,5\% & 26,2\% & 24,8\% & 25,1\% & 29,4\% & 24,2\% \\
+ & ficha & 30,8\% & 26,4\% & 26,2\% & 26,2\% & 26,1\% & 30,4\% & 25,7\% \\
+\multirow{3}{*}{Qwen3 14B} & sem pré-treino & 35,5\% & 28,9\% & -- & -- & -- & -- & 29,7\% \\
+ & texto bruto & 36,0\% & 31,2\% & 28,2\% & 28,3\% & 30,7\% & 26,7\% & 30,2\% \\
+ & ficha & 35,6\% & 31,2\% & 31,0\% & 30,8\% & 31,6\% & 28,7\% & 30,8\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{Desempenho dos modelos na escrita de peça, aspectos formais.}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrrrr}
+\hline
+\textbf{Modelo} & \textbf{Pré-treino} & \textbf{bloco 0} & \textbf{I} & \textbf{II} & \textbf{III} & \textbf{IV} & \textbf{V} & \textbf{VI} \\
+\hline
+\multirow{3}{*}{Tucano 1,5B} & sem pré-treino & 14,6\% & 14,2\% & -- & -- & -- & -- & 31,1\% \\
+ & texto bruto & 3,0\% & 26,9\% & 26,9\% & 32,3\% & 36,4\% & 8,7\% & 37,5\% \\
+ & ficha & 6,2\% & 23,0\% & 19,9\% & 24,4\% & 26,5\% & 9,5\% & 27,1\% \\
+\multirow{3}{*}{Tucano 3,7B} & sem pré-treino & 21,9\% & 27,3\% & 33,3\% & 38,6\% & 39,7\% & 14,7\% & 39,2\% \\
+ & texto bruto & 6,2\% & 36,0\% & 35,6\% & 41,3\% & 40,4\% & 21,5\% & 41,1\% \\
+ & ficha & 14,7\% & 34,6\% & 36,8\% & 40,2\% & 39,9\% & 16,4\% & 40,4\% \\
+\multirow{3}{*}{Qwen3 8B} & sem pré-treino & 16,4\% & 9,2\% & -- & -- & -- & -- & 28,8\% \\
+ & texto bruto & 9,9\% & 30,6\% & 28,0\% & 31,1\% & 33,1\% & 14,0\% & 34,6\% \\
+ & ficha & 18,1\% & 26,9\% & 28,6\% & 31,1\% & 31,5\% & 16,2\% & 32,7\% \\
+\multirow{3}{*}{Qwen3 14B} & sem pré-treino & 21,4\% & 22,8\% & -- & -- & -- & -- & 31,6\% \\
+ & texto bruto & 17,5\% & 33,4\% & 31,1\% & 35,7\% & 38,9\% & 24,8\% & 37,4\% \\
+ & ficha & 22,7\% & 31,7\% & 29,8\% & 35,2\% & 37,0\% & 20,4\% & 36,8\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{Desempenho dos modelos na escrita de peça, aspectos de mérito.}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrrrr}
+\hline
+\textbf{Modelo} & \textbf{Pré-treino} & \textbf{bloco 0} & \textbf{I} & \textbf{II} & \textbf{III} & \textbf{IV} & \textbf{V} & \textbf{VI} \\
+\hline
+\multirow{3}{*}{Tucano 1,5B} & sem pré-treino & 13,5\% & 12,8\% & -- & -- & -- & -- & 15,4\% \\
+ & texto bruto & 2,5\% & 12,2\% & 13,7\% & 15,7\% & 17,5\% & 8,4\% & 19,1\% \\
+ & ficha & 10,9\% & 13,1\% & 9,7\% & 12,8\% & 14,9\% & 8,7\% & 15,6\% \\
+\multirow{3}{*}{Tucano 3,7B} & sem pré-treino & 23,3\% & 16,7\% & 26,0\% & 26,2\% & 27,7\% & 15,3\% & 27,3\% \\
+ & texto bruto & 11,0\% & 24,3\% & 25,8\% & 30,2\% & 29,0\% & 19,1\% & 28,8\% \\
+ & ficha & 16,5\% & 21,9\% & 26,3\% & 27,9\% & 29,1\% & 18,1\% & 29,7\% \\
+\multirow{3}{*}{Qwen3 8B} & sem pré-treino & 17,0\% & 4,9\% & -- & -- & -- & -- & 19,9\% \\
+ & texto bruto & 10,5\% & 18,3\% & 19,3\% & 21,4\% & 21,5\% & 15,0\% & 22,8\% \\
+ & ficha & 17,6\% & 18,8\% & 21,7\% & 24,0\% & 23,2\% & 12,1\% & 24,2\% \\
+\multirow{3}{*}{Qwen3 14B} & sem pré-treino & 18,5\% & 15,4\% & -- & -- & -- & -- & 23,4\% \\
+ & texto bruto & 8,1\% & 22,4\% & 24,2\% & 26,3\% & 27,0\% & 20,5\% & 25,9\% \\
+ & ficha & 17,9\% & 24,6\% & 24,0\% & 30,3\% & 29,5\% & 18,1\% & 30,0\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{Desempenho por área do direito no Tucano2 3,7B, média dos seis blocos.}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrrrr}
+\hline
+\textbf{Tarefa} & \textbf{Pré-treino} & \textbf{Admin.} & \textbf{Civil} & \textbf{Const.} & \textbf{Empres.} & \textbf{Penal} & \textbf{Trab.} & \textbf{Tribut.} \\
+\hline
+\multirow{3}{*}{questão discursiva} & sem pré-treino & 36,3\% & 23,0\% & 27,1\% & 30,4\% & 25,2\% & 21,2\% & 33,0\% \\
+ & texto bruto & 38,7\% & 21,2\% & 24,8\% & 31,9\% & 29,3\% & 18,8\% & 31,7\% \\
+ & ficha & 37,8\% & 24,6\% & 29,7\% & 34,0\% & 29,0\% & 20,5\% & 32,7\% \\
+\multirow{3}{*}{peça, aspectos formais} & sem pré-treino & 22,3\% & 43,5\% & 40,3\% & 45,3\% & 15,8\% & 14,3\% & 43,5\% \\
+ & texto bruto & 29,8\% & 45,5\% & 45,0\% & 52,5\% & 16,0\% & 14,5\% & 48,5\% \\
+ & ficha & 26,0\% & 43,7\% & 46,7\% & 47,1\% & 21,9\% & 13,2\% & 44,3\% \\
+\multirow{3}{*}{peça, aspectos de mérito} & sem pré-treino & 13,0\% & 24,0\% & 24,4\% & 26,4\% & 14,0\% & 22,9\% & 37,9\% \\
+ & texto bruto & 14,3\% & 30,1\% & 25,8\% & 27,0\% & 19,1\% & 24,4\% & 42,7\% \\
+ & ficha & 15,8\% & 25,8\% & 33,4\% & 25,4\% & 16,6\% & 22,3\% & 39,3\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{O que cada regime de pré-treino rende, e em que tarefa}
+Compare a linha \emph{sem pré-treino} com as duas que a seguem, no mesmo modelo e na mesma coluna. No Tucano2 3,7B, média dos seis blocos, a \textbf{questão discursiva} vai de 28,0\% no controle para 28,1\% com texto bruto e 29,7\% com ficha. A \textbf{parte formal da peça} vai de 32,1\% para 36,0\% com texto bruto e 34,7\% com ficha. A \textbf{parte de mérito} vai de 23,2\% para 26,2\% e 25,5\%.
+A coluna \textbf{bloco 0} mostra que esse ganho é recuperação de um déficit, e não acréscimo sobre um empate. Antes de qualquer exemplo de tarefa, o pré-treino em \textbf{texto bruto} deixa o modelo pior do que ele estava: no Tucano2 3,7B a parte formal cai de 21,9\% para 6,2\% e a de mérito de 23,3\% para 11,0\%, e a queda se repete nos quatro modelos, com média de 9,4 pontos na forma e 10,1 no mérito. O pré-treino em \textbf{ficha} cobra bem menos, 3,1 e 2,4 pontos, e é o único dos dois que melhora a discursiva nesse estágio, com 2,8 pontos de média. Um modelo entregue no estado de bloco 0 com texto bruto seria pior do que o modelo sem tratamento nenhum; é o ajuste fino que recupera o déficit e, a partir dele, ultrapassa o controle.
+\subsection{Os dois regimes de corpus não são substitutos}
+Compare agora as duas últimas sublinhas de cada modelo. Na discursiva a ficha vence o texto bruto em quase toda coluna dos quatro modelos; na parte formal da peça ocorre o inverso, e o texto bruto vence em praticamente todas. Nos dois modelos Qwen3 os dois recortes da peça têm \textbf{sinais opostos}: a ficha ganha no mérito e perde na forma, e a nota agregada da peça, sendo 85,1\% mérito, registra só o sinal do mérito.
+\subsection{Composição do bloco importa mais que o tamanho dele}
+Os blocos não formam uma escada de volume, e isso muda o que os contrastes entre eles medem. O contraste \textbf{I contra II} não é de volume: os dois blocos são disjuntos e têm tamanho parecido, 1.007 contra 1.182, de modo que ele compara \emph{substituir} material oficial da OAB por material gerado. O resultado é fraco em toda tarefa, com ganho médio de 0,03 ponto negativo na parte formal e um braço significativo de nove; trocar o oficial pelo gerado não compra nada. O contraste \textbf{II contra III} acrescenta 525 exemplos de peça sintética em cascata e é um acréscimo genuíno: nulo na discursiva, com dois braços significativos de nove e ganho médio de 0,02, e significativo em nove de nove na parte formal, com 4,44 de média. O contraste \textbf{I contra IV} acrescenta ao material oficial todo o material gerado, 1.769 exemplos, e é o de maior efeito, com oito braços de nove na parte formal e 5,90 de ganho médio, contra um braço de nove na discursiva e 0,31. Já \textbf{IV contra VI}, que acrescenta os 223 exemplos de concurso de carreira, é nulo em toda tarefa.
+Nenhum dos quatro contrastes isola volume de composição, porque cada acréscimo traz material de um tipo que não estava lá. O que se sustenta é que acrescentar material gerado ao oficial rende, e rende na peça; que substituir o oficial pelo gerado não rende; e que o último acréscimo, de material de outro gênero, não rende em lugar nenhum. A amplitude entre blocos confirma o mesmo por outro caminho: a distância entre a melhor e a pior coluna de cada linha vai de 4,3 a 6,2 pontos na discursiva e de 18,5 a 28,8 na parte formal da peça. O que os blocos ensinam de diferente é sobretudo forma de documento.
+\subsection{O bloco de carreiras ensina o esqueleto errado}
+O bloco V contém 223 exemplos de concursos de carreira jurídica e nenhum material da OAB. Nas Tabelas 2 e 3 ele é a pior coluna de quase toda linha, e o déficit se concentra na parte formal. A hipótese é de gênero e faz uma previsão verificável: uma sentença não tem endereçamento, porque o juiz não se dirige a ninguém, e um parecer também não. A previsão se confirma com margem larga, pois o bloco V derruba os critérios de endereçamento entre 19,4 e 26,0 pontos percentuais nos quatro modelos, sem exceção, e a qualificação das partes entre 15,9 e 24,7.
+\subsection{Comparação com o modelo-base}
+As tabelas trazem o ponto de partida interno do experimento. Resta compará-las com o modelo como ele foi publicado, sem pré-treino e sem ajuste fino. Na \textbf{peça} o pipeline funciona nos quatro modelos, e o ganho se concentra no recorte formal: de 17,5 a 22,9 pontos percentuais, contra 5,6 a 11,8 no mérito. Na \textbf{discursiva} ele funciona nos dois Tucano2, com 3,9 e 6,8 pontos, e falha nos dois Qwen3: no 8B apenas uma das doze condições treinadas supera o base, e no 14B nenhuma supera, ficando a melhor delas 4,0 pontos abaixo. A leitura não é de degradação, e sim de \textbf{realocação}. O pipeline inteiro ensina a forma do documento processual, e o que ele cobra é a capacidade de responder pergunta curta, capacidade que os Qwen3 já possuíam em nível alto, chegando com 29,5\% e 35,5\% na discursiva, acima do melhor Tucano2 treinado. Numa nota que agregasse os dois gêneros, essa troca apareceria como perda pura, porque a discursiva é 84 das 105 questões.
+\subsection{Por área do direito}
+A Tabela 5 fixa o Tucano2 3,7B e abre as sete áreas. O padrão da Seção 4.1 se mantém em todas: os dois regimes de pré-treino rendem na peça e nenhum dos dois rende na discursiva. Vale o registro sobre um defeito de coleta descrito na ficha do conjunto: o Código Civil entrou no corpus com 57 de 2.046 artigos e o Código Penal comum não entrou, enquanto as outras cinco áreas têm o seu diploma fundamental com cobertura entre 89\% e 100\%. Se o valor do pré-treino viesse de ler o texto da lei, o ganho deveria ser menor nessas duas áreas. Não é: Direito Penal tem o maior ganho de todas na discursiva. O que se sustenta é a negativa, e não uma afirmação sobre o mecanismo.
+
+\section{Discussão}
+O achado que organiza os demais é que o efeito de cada decisão depende do gênero textual da tarefa, e depende a ponto de inverter de sinal. Isso tem consequência metodológica direta para a literatura de adaptação de domínio: relatar uma nota agregada sobre um conjunto de avaliação heterogêneo pode produzir a conclusão de que uma intervenção não funciona quando ela funciona bem num gênero e mal em outro. No nosso caso, o contraste II contra III é nulo na discursiva, com dois braços significativos de nove, e significativo em nove de nove na parte formal da peça.
+A decomposição vale um passo além do gênero. Dentro da peça, forma e mérito respondem de modo diferente à mesma intervenção, e a nota agregada, que é 85,1\% mérito, registra só um dos dois. Sempre que a tarefa avaliada se divide em subtarefas de natureza distinta, e o espelho de correção de uma banca examinadora é uma divisão pronta, a nota agregada é uma média ponderada que reflete a subtarefa mais numerosa e não necessariamente a que interessa.
+O segundo achado é que a forma do corpus é uma variável de projeto, não um detalhe de implementação. Reestruturar o material em fichas não é uniformemente melhor nem pior que usar o texto como ele é: cada forma ensina o que o seu material contém. A correlação de $\rho$ = 0,30 entre os ganhos e a razão de mais de dois para um entre critérios exclusivos e compartilhados indicam que a escolha entre os dois está mal colocada como pergunta, e que o que interessa é a combinação, que não foi treinada aqui.
+O terceiro tem implicação prática para quem constrói pipelines. O pré-treino continuado em texto jurídico bruto custa capacidade de formatar resposta antes de render qualquer coisa, e só se paga se houver ajuste fino suficiente depois. Relatos de pré-treino continuado que não medem o estado intermediário podem estar atribuindo à fase de pré-treino um ganho que é, em boa parte, capacidade de recuperação da fase seguinte.
+Quanto à escala, os resultados não são uniformes entre famílias, e a diferença acompanha a exposição prévia ao português mais do que o número de parâmetros. Os modelos com foco em português ganham nas duas tarefas; os multilíngues, que chegam com desempenho alto em questão discursiva, ganham muito na peça e perdem na discursiva. Isto é consistente com a hipótese de redundância: material adicional é informação nova para quem não a tinha e competição por capacidade para quem já a tinha.
+
+\section{Conclusão}
+Medimos separadamente três decisões que a receita corrente de adaptação de domínio trata como uma só, num desenho fatorial de 180 condições avaliadas contra gabarito itemizado oficial. Concluímos o seguinte. Notas de gêneros textuais distintos não devem ser agregadas em avaliação de adaptação de domínio, e a mesma cautela vale para subtarefas de natureza diferente dentro de um gênero. Texto bruto e material reestruturado são complementares, não substitutos: melhoram conjuntos de critérios que se sobrepõem pouco. E o pré-treino continuado, no domínio e na tarefa medidos, entrega predominantemente forma de documento, cobrando antes uma degradação que só o ajuste fino subsequente recupera.
+Reportamos as seguintes limitações. O regime de controle foi rodado nos seis blocos apenas no Tucano2 3,7B; nos outros três modelos ele cobre os extremos de volume, os blocos I e VI. Os dois corpora não são pareados em contagem de tokens, 59,43 contra 50,58 milhões, e a expansão inverte a composição por categoria, de modo que parte do efeito atribuído à forma pode ser mistura. E o corpus estruturado, gerado por um modelo-professor sem verificação de referência, contém citação processual fabricada que chega à saída do modelo treinado a uma taxa de 0,512\%, contra 0,072\% no controle; em valor absoluto é baixa, em direção é sistemática, e a correção pertence à próxima versão do corpus. O trabalho seguinte, já viabilizado pelo material construído, é treinar a condição combinada, com mistura em proporção fixa, treino em dois estágios e roteamento por gênero como as três formas a testar, e verificar quanto do teto medido aqui se converte em ganho real.
+
+\begin{thebibliography}{99}
+\bibitem{r1} Gururangan, S., Marasović, A., Swayamdipta, S., Lo, K., Beltagy, I., Downey, D., Smith, N. A. \emph{Don't Stop Pretraining: Adapt Language Models to Domains and Tasks}. ACL, 2020.
+\bibitem{r2} Chalkidis, I., Fergadiotis, M., Malakasiotis, P., Aletras, N., Androutsopoulos, I. \emph{LEGAL-BERT: The Muppets straight out of Law School}. Findings of EMNLP, 2020.
+\bibitem{r3} Colombo, P., Pires, T. P., Boudiaf, M. et al. \emph{SaulLM-7B: A pioneering Large Language Model for Law}. arXiv:2403.03883, 2024.
+\bibitem{r4} Pires, R., Almeida, T. S., Abonizio, H., Nogueira, R. \emph{OABench}. Maritaca AI. \textit{[conferir autoria, veículo e ano]}
+\bibitem{r5} Maritaca AI. \emph{MagisBench}. \textit{[conferir autoria, veículo e ano]}
+\bibitem{r6} Pacheco, E. C. B., Suriani, F. M., Ribeiro, R. \emph{Rabula: A Benchmark for Evaluating LLMs in Brazilian Legal Tasks}. Proceedings of the First Argument Mining and Empirical Legal Research Workshop (AMELR 2025), CEUR-WS Vol-4089, paper 6, 2025.
+\bibitem{r7} Zheng, L., Chiang, W.-L., Sheng, Y. et al. \emph{Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena}. NeurIPS, 2023.
+\bibitem{r8} Pacheco, E., Russo, C. M. \emph{Juiz não é ranking: o que a tabela de classificação de corretores automáticos não consegue dizer}. Artigo companheiro, em preparação, 2026.
+\bibitem{r9} Hu, E. J., Shen, Y., Wallis, P. et al. \emph{LoRA: Low-Rank Adaptation of Large Language Models}. ICLR, 2022.
+\bibitem{r10} Benjamini, Y., Hochberg, Y. \emph{Controlling the False Discovery Rate}. Journal of the Royal Statistical Society B, 57(1), 289--300, 1995.
+\end{thebibliography}
+\end{document}

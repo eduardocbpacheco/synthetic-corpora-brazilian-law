@@ -1,0 +1,66 @@
+<h2><span class="num">3</span>Materiais e métodos</h2>
+
+<p>Quatro modelos-base entram no experimento, em duas famílias e quatro escalas: Tucano2 de 1,5 e 3,7 bilhões de parâmetros, treinados com foco em português, e Qwen3 de 8,2 e 14,8 bilhões, multilíngues. A diferença de família é deliberada, porque permite distinguir um efeito de escala de um efeito de exposição prévia ao português jurídico. Uma condição de ajuste fino custa entre 4,8 e 28 horas de GPU NVIDIA A10G conforme o tamanho.</p>
+
+<h3><span class="num">3.1</span>O corpus de pré-treino continuado: o par bruto e ficha sintética</h3>
+
+<p>O eixo central do desenho é a forma do corpus de pré-treino. Construímos dois corpora a partir do mesmo acervo de documentos coletados de fontes oficiais: normas federais e estaduais, acórdãos e enunciados de súmula de tribunais superiores e do Tribunal de Justiça de São Paulo. Os dois são pareados documento a documento: o mesmo acórdão que entra num entra no outro.</p>
+
+<p>No regime de <b>texto bruto</b> o documento entra como foi coletado e é cortado por tamanho quando excede a janela de contexto. O corte é cego: cai onde calha, inclusive no meio de uma frase. São 39.856 documentos e 50,58 milhões de tokens no tokenizador do Tucano2. A composição é dominada por decisão judicial: 78,3% dos tokens são acórdãos integrais, 9,1% jurisprudência consolidada (súmulas, teses de repercussão geral e de recurso repetitivo), 8,9% texto de norma e 3,7% enunciados.</p>
+
+<p>No regime <b>estruturado</b> o mesmo documento é convertido numa <b>ficha</b> antes de entrar. A ficha preserva o texto original intacto num campo próprio e acrescenta seis camadas geradas por um modelo-professor: síntese, explicação, efeito prático, dispositivos relacionados, princípios envolvidos e pares de pergunta e resposta derivados do conteúdo. Cada camada é um nó com identificador e relação explícita de filiação, o que permite fatiar a ficha sem perder a âncora: o corte respeita os nós, e cada pedaço carrega o cabeçalho de identificação mais um subconjunto coerente das camadas. São 41.900 documentos e 59,43 milhões de tokens.</p>
+
+<p>A expansão inverte a composição, e isso é uma limitação do par. Uma norma tem poucos tokens no original e muitos depois de expandida; um acórdão integral já é longo e a expansão acrescenta proporcionalmente menos. O braço estruturado fica com 36,3% de norma e 35,5% de caso julgado, contra 8,9% e 78,3% do bruto. Os dois partem do mesmo acervo, mas não chegam à GPU com a mesma mistura de categoria, de modo que parte do efeito atribuído à forma pode ser mistura.</p>
+
+<p>O orçamento de tokens é o do braço menor, contado com o tokenizador de cada família. O braço bruto roda uma época exata sobre o arquivo inteiro; o estruturado é truncado até casar o mesmo número de tokens, o que dá 0,851 época no Tucano2 e 0,877 no Qwen3. Nenhum braço repete documento.</p>
+
+<h3><span class="num">3.2</span>O corpus de ajuste fino: o que há em cada bloco</h3>
+
+<p>O corpus de ajuste fino é composto por pares de enunciado e resposta, e os exemplos variam em dois eixos independentes. O primeiro é a origem do enunciado: ele pode ser uma questão real que caiu na prova, ou uma questão sintética escrita por um modelo a partir de um caso real usado como semente e, no caso extremo, uma questão sintética escrita a partir de outra questão sintética, a dois saltos do material oficial. O segundo é a âncora da resposta: ela pode seguir o espelho oficial da banca, com os critérios e a pontuação publicados, ou ser livre, com uma rubrica gerada junto pelo próprio modelo-professor.</p>
+
+<p>Cinco conjuntos concentram 2.630 dos 2.909 exemplos e são os que dão identidade aos blocos:</p>
+
+<ul>
+<li><b>D1</b> · 691 questões <b>discursivas reais</b> da segunda fase do Exame de Ordem, com o espelho oficial da banca como resposta. Enunciado a zero salto, âncora oficial. Resposta mediana de 376 tokens.</li>
+<li><b>D5</b> · 181 <b>peças reais</b> da segunda fase, também com espelho oficial. Resposta mediana de 1.579 tokens, o conjunto mais longo do corpus.</li>
+<li><b>D3</b> · 558 questões da <b>primeira fase</b> do Exame de Ordem, de múltipla escolha, convertidas em pergunta aberta. Enunciado a um salto, e a âncora é o gabarito objetivo, que diz qual alternativa está certa mas não desenvolve o raciocínio.</li>
+<li><b>D2</b> · 686 <b>peças sintéticas</b>, escritas a partir de um caso real da segunda fase usado como semente. Enunciado a um salto, âncora livre.</li>
+<li><b>D4</b> · 514 <b>peças sintéticas em cascata</b>, escritas a partir de um enunciado do D3. Enunciado a dois saltos, âncora livre.</li>
+</ul>
+
+<p>Os 279 exemplos restantes vêm de dezenove conjuntos pequenos de <b>concursos de carreira jurídica</b>: peças, pareceres, sentenças e dissertações de bancas diversas, da Advocacia-Geral da União e da magistratura do Tribunal de Justiça de São Paulo.</p>
+
+<p>Os seis blocos combinam esses conjuntos, e eles não formam uma escada de volume:</p>
+
+<ul>
+<li><b>I</b> · 1.007 exemplos, só material oficial da OAB com espelho da banca (D1 e D5).</li>
+<li><b>II</b> · 1.182, só material gerado ou convertido (D2 e D3). Não contém o bloco I.</li>
+<li><b>III</b> · 1.681, o bloco II mais o material a dois saltos (D4).</li>
+<li><b>IV</b> · 2.687, o bloco I mais o bloco III, isto é, toda a OAB, oficial e gerada.</li>
+<li><b>V</b> · 223, só concursos de carreira, nenhum material da OAB.</li>
+<li><b>VI</b> · 2.909, o bloco IV mais o bloco V: o corpus completo.</li>
+</ul>
+
+<p>O aninhamento foi verificado comparando os exemplos por conteúdo, e não pelo rótulo, porque um exemplo gerado herda o identificador do original que lhe serviu de semente. II ⊂ III ⊂ IV ⊂ VI e I ⊂ IV, mas <b>I e II são disjuntos</b>, sem um único exemplo em comum, assim como I e III.</p>
+
+<h3><span class="num">3.3</span>Desenho fatorial e os três pontos de partida</h3>
+
+<p>O experimento cruza três fatores: o regime de pré-treino, com três níveis, I) texto bruto, II) estruturado e III) nenhum, que pula a fase inteira e serve de controle; o bloco de ajuste fino, com seis níveis; e o modelo-base, com quatro níveis. Cada combinação foi treinada com três sementes aleatórias distintas, totalizando 180 condições.</p>
+
+<p>O desenho tem três pontos de partida sem tratamento, e cada um responde a uma pergunta diferente. O <b>modelo-base</b> é o modelo como foi publicado, sem pré-treino e sem ajuste fino; compará-lo com uma condição treinada mede o pipeline inteiro. O <b>bloco 0</b> é o modelo depois do pré-treino continuado e antes de qualquer exemplo de tarefa, e existe em duas versões, uma por regime de corpus (bruto ou as fichas geradas); compará-lo com um bloco de ajuste fino mede o ajuste fino. O regime <b>nenhum</b> é o modelo que pulou o pré-treino e foi direto ao ajuste fino; compará-lo com o mesmo bloco nos outros regimes mede o pré-treino. Note-se que o regime <code>nenhum</code> não é o mesmo modelo em todos os blocos, porque ele remove o pré-treino e não o ajuste fino; o único ponto de partida constante ao longo dos blocos é o bloco 0.</p>
+
+<p>Todas as 180 condições usam o mesmo protocolo: adaptação de baixo posto (LoRA) [9] com posto 32 e fator 64, aplicada às últimas 24 camadas e a sete módulos de projeção; taxa de aprendizado de 1×10⁻⁵ com decaimento por cosseno; lote efetivo de 16; janela de 3.072 tokens; e mascaramento do enunciado, de modo que a perda é calculada apenas sobre a resposta. O número de passos não é fixo: é calculado para que todo bloco receba exatamente três épocas, o que torna o volume de exemplos, e não o número de atualizações, a variável manipulada.</p>
+
+<h3><span class="num">3.4</span>Avaliação</h3>
+
+<p>A avaliação segue a metodologia publicada em trabalho anterior [6] e se baseia em <i>LLM-as-a-judge</i> de modelos bem classificados nas tarefas de geração de peça e de resposta a questões discursivas, a partir da comparação de diferentes juízes automáticos com o juízo humano sobre o cumprimento ou não das respostas dadas por um modelo, frente aos gabaritos oficiais do exame de segunda fase da OAB.</p>
+
+<p>O conjunto de avaliação é fixo e nunca foi tocado pelo treino: são <b>105 questões</b> da segunda fase, sendo 84 discursivas e 21 casos práticos que pedem uma peça processual. Os exames de onde elas vêm foram excluídos de todo o corpus de treino, o que verificamos por identificador de exame em cada bloco.</p>
+
+<p>Cada questão é corrigida contra o espelho oficial da banca, item a item. São <b>940 critérios binários</b> no total, cada um com a pontuação que a banca lhe atribui. A nota de uma condição é a média, por execução, da fração de pontos obtida em cada questão e não a proporção simples de critérios atendidos, que daria mais peso às questões com espelho mais longo. Cada condição é gerada dez vezes de forma independente, a temperatura 0,1.</p>
+
+<p>São dois juízes, um por gênero, escolhidos e fixados antes de qualquer medição das 180 condições: <b>Kimi K2.5</b> para a questão discursiva, com concordância de Cohen de <b>κ = 0,799</b> contra o padrão-ouro humano, e <b>GPT-OSS 120B</b> para a peça, com <b>κ = 0,754</b>. Para referência, a concordância entre os três anotadores humanos é de 0,789 na discursiva e 0,763 na peça.</p>
+
+<p>O espelho da banca dá um título a cada critério da peça: Endereçamento, Qualificação das partes, Fechamento, Fundamentação, Pedidos. Agrupamos esses títulos em duas classes: os de <b>forma</b>, que cobram o esqueleto do documento e somam 148 critérios e 14,9% dos pontos, e os de <b>mérito</b>, que cobram a tese jurídica e somam 413 critérios e 85,1%. Os títulos são da banca; o agrupamento em duas classes é nosso, porque a banca nomeia a exigência sem classificá-la. Reportamos peça formal, peça mérito e peça agregada sempre que a peça é medida.</p>
+
+<p>Condições são comparadas por teste de Wilcoxon pareado por questão, com as três sementes empilhadas. Onde o número de comparações é grande, aplicam-se as correções de Bonferroni e de Benjamini-Hochberg [10].</p>

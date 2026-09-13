@@ -1,0 +1,152 @@
+{
+ "titulo": "Corpus pareado de adaptação jurídica: texto bruto e fichas estruturadas",
+ "versao": "1.0",
+ "resumo": "Dois corpora de pré-treino continuado pareados documento a documento — um de texto jurídico como coletado, outro do mesmo material reestruturado em fichas com camadas geradas — mais os seis blocos de ajuste fino da OAB.",
+ "licenca": "CC BY 4.0 para a compilação; ver DATASHEET quanto ao material gerado",
+ "deposito": "corpus-treino",
+ "congelado_em": "2026-09-13 15:53:43",
+ "arquivos": 20,
+ "bytes": 930180863,
+ "itens": [
+  {
+   "caminho": "cpt/bruto_completo.jsonl",
+   "origem": "data/ablacao_regime/bruto_completo.jsonl",
+   "bytes": 199994933,
+   "linhas": 39856,
+   "sha256": "e43d20d375628dd86f908283ef9aa262cd01872f0708cbf0fc58b7ff7e6560c4"
+  },
+  {
+   "caminho": "cpt/expandido_completo.jsonl",
+   "origem": "data/ablacao_regime/expandido_completo.jsonl",
+   "bytes": 224171072,
+   "linhas": 41900,
+   "sha256": "34ccdbe91b763953153942dd3aa737228f6f7b43be695672b3368a3417d9f0c3"
+  },
+  {
+   "caminho": "cpt/casado_tucano_bruto.jsonl",
+   "origem": "data/ablacao_regime/casado_tucano_bruto.jsonl",
+   "bytes": 127669528,
+   "linhas": 26195,
+   "sha256": "4c987e1e79bd1c125182c5282e76f64dc9abba206ad13b1d72253f52d2fb806e"
+  },
+  {
+   "caminho": "cpt/casado_tucano_expandido.jsonl",
+   "origem": "data/ablacao_regime/casado_tucano_expandido.jsonl",
+   "bytes": 118604065,
+   "linhas": 22448,
+   "sha256": "79e40a4f6366c61e75ec3b86a663c01f7a56323a16c067c173597d99f63ad99e"
+  },
+  {
+   "caminho": "cpt/casado_qwen_bruto.jsonl",
+   "origem": "data/ablacao_regime/casado_qwen_bruto.jsonl",
+   "bytes": 98461468,
+   "linhas": 20073,
+   "sha256": "79a409c62944c6bc9972373a46c057b91a67f654ae4372a138e3a0fc2b04a7e3"
+  },
+  {
+   "caminho": "cpt/casado_qwen_expandido.jsonl",
+   "origem": "data/ablacao_regime/casado_qwen_expandido.jsonl",
+   "bytes": 94525389,
+   "linhas": 17909,
+   "sha256": "ea72c12feff30dfd89bb786509709adc18b60c22a72a003f13457fe67ad2307e"
+  },
+  {
+   "caminho": "cpt/manifesto_orcamento.json",
+   "origem": "data/ablacao_regime/manifesto.json",
+   "bytes": 3424,
+   "linhas": null,
+   "sha256": "6f3ddea1e814670fce97762f1da27035ff89c74f25b826369ea61fbaccb6570b"
+  },
+  {
+   "caminho": "sft/bloco_I/train.jsonl",
+   "origem": "data/finetune/blocos/I/train.jsonl",
+   "bytes": 4893033,
+   "linhas": 1007,
+   "sha256": "ecd5bd4e2a0e94f7fa51cbaa7c42937053c0a5e9e1ba5adf59f46fd6dfef7295"
+  },
+  {
+   "caminho": "sft/bloco_I/valid.jsonl",
+   "origem": "data/finetune/blocos/I/valid.jsonl",
+   "bytes": 238142,
+   "linhas": 52,
+   "sha256": "d6e3a69db19c3ffed31df9510d82198d94453ebed50451d2b30eb56bd0b34580"
+  },
+  {
+   "caminho": "sft/bloco_II/train.jsonl",
+   "origem": "data/finetune/blocos/II/train.jsonl",
+   "bytes": 8605653,
+   "linhas": 1182,
+   "sha256": "22f061f17e91f5ae810736a1f7069c803539ed23d1b4ac770e0dc3cf164e79bd"
+  },
+  {
+   "caminho": "sft/bloco_II/valid.jsonl",
+   "origem": "data/finetune/blocos/II/valid.jsonl",
+   "bytes": 477392,
+   "linhas": 62,
+   "sha256": "f438e186a7108a1a324d284472cd410ef982f25da9880babdef42573beee4487"
+  },
+  {
+   "caminho": "sft/bloco_III/train.jsonl",
+   "origem": "data/finetune/blocos/III/train.jsonl",
+   "bytes": 12329026,
+   "linhas": 1681,
+   "sha256": "a6d91b7cbde76f85db2ab12cc41a334e738f5b75c73989beb40d4b40689e6f12"
+  },
+  {
+   "caminho": "sft/bloco_III/valid.jsonl",
+   "origem": "data/finetune/blocos/III/valid.jsonl",
+   "bytes": 674613,
+   "linhas": 88,
+   "sha256": "d11f6020274982ce49599263c02bc1b6adea65f015b6b547403e1228672dd881"
+  },
+  {
+   "caminho": "sft/bloco_IV/train.jsonl",
+   "origem": "data/finetune/blocos/IV/train.jsonl",
+   "bytes": 17221426,
+   "linhas": 2687,
+   "sha256": "f44573d66f66dcf1276d38c22de92512887e5cf4c370b3d3701679d1998ebe14"
+  },
+  {
+   "caminho": "sft/bloco_IV/valid.jsonl",
+   "origem": "data/finetune/blocos/IV/valid.jsonl",
+   "bytes": 913388,
+   "linhas": 141,
+   "sha256": "d6adf8103ae0ff5e831b999b0ed8793b5c3fb5be9bd9ee017a6853235b4c9394"
+  },
+  {
+   "caminho": "sft/bloco_VII/train.jsonl",
+   "origem": "data/finetune/blocos/VII/train.jsonl",
+   "bytes": 1546012,
+   "linhas": 223,
+   "sha256": "cd5b9e48939693fb880c3b272a15afbb010d31ac4c78e190f95bf887559a2029"
+  },
+  {
+   "caminho": "sft/bloco_VII/valid.jsonl",
+   "origem": "data/finetune/blocos/VII/valid.jsonl",
+   "bytes": 81223,
+   "linhas": 11,
+   "sha256": "95ff49dfa4178360143f4dce82b5f5d8af4602bb93b1bc45dfa9521decb6af53"
+  },
+  {
+   "caminho": "sft/bloco_X/train.jsonl",
+   "origem": "data/finetune/blocos/X/train.jsonl",
+   "bytes": 18763829,
+   "linhas": 2909,
+   "sha256": "f1c729aa65b4e9ec3a1b02cb7a79fac04c92375ee83711a49bb04e96366432e3"
+  },
+  {
+   "caminho": "sft/bloco_X/valid.jsonl",
+   "origem": "data/finetune/blocos/X/valid.jsonl",
+   "bytes": 998220,
+   "linhas": 153,
+   "sha256": "3d7baca148da4944ace0454ff2932127ac5fef7a5b4f0c7c275c2e5a7cc085fa"
+  },
+  {
+   "caminho": "receita/build_ablacao_regime.py",
+   "origem": "aws/build_ablacao_regime.py",
+   "bytes": 9027,
+   "linhas": null,
+   "sha256": "d0c97ec1f57ece2ddeb96c5f1ae0388090857a82f4169dca64c1044de6292828"
+  }
+ ]
+}

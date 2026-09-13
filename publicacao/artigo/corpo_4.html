@@ -1,0 +1,32 @@
+<h2><span class="num">5</span>Discussão</h2>
+
+<p>O achado que organiza os demais é que o efeito de cada decisão depende do gênero textual da tarefa, e depende a ponto de inverter de sinal. Isso tem consequência metodológica direta para a literatura de adaptação de domínio: relatar uma nota agregada sobre um conjunto de avaliação heterogêneo pode produzir a conclusão de que uma intervenção não funciona quando ela funciona bem num gênero e mal em outro. No nosso caso, o contraste II contra III é nulo na discursiva, com dois braços significativos de nove, e significativo em nove de nove na parte formal da peça.</p>
+
+<p>A decomposição vale um passo além do gênero. Dentro da peça, forma e mérito respondem de modo diferente à mesma intervenção, e a nota agregada, que é 85,1% mérito, registra só um dos dois. Sempre que a tarefa avaliada se divide em subtarefas de natureza distinta, e o espelho de correção de uma banca examinadora é uma divisão pronta, a nota agregada é uma média ponderada que reflete a subtarefa mais numerosa e não necessariamente a que interessa.</p>
+
+<p>O segundo achado é que a forma do corpus é uma variável de projeto, não um detalhe de implementação. Reestruturar o material em fichas não é uniformemente melhor nem pior que usar o texto como ele é: cada forma ensina o que o seu material contém. A correlação de ρ = 0,30 entre os ganhos e a razão de mais de dois para um entre critérios exclusivos e compartilhados indicam que a escolha entre os dois está mal colocada como pergunta, e que o que interessa é a combinação, que não foi treinada aqui.</p>
+
+<p>O terceiro tem implicação prática para quem constrói pipelines. O pré-treino continuado em texto jurídico bruto custa capacidade de formatar resposta antes de render qualquer coisa, e só se paga se houver ajuste fino suficiente depois. Relatos de pré-treino continuado que não medem o estado intermediário podem estar atribuindo à fase de pré-treino um ganho que é, em boa parte, capacidade de recuperação da fase seguinte.</p>
+
+<p>Quanto à escala, os resultados não são uniformes entre famílias, e a diferença acompanha a exposição prévia ao português mais do que o número de parâmetros. Os modelos com foco em português ganham nas duas tarefas; os multilíngues, que chegam com desempenho alto em questão discursiva, ganham muito na peça e perdem na discursiva. Isto é consistente com a hipótese de redundância: material adicional é informação nova para quem não a tinha e competição por capacidade para quem já a tinha.</p>
+
+<h2><span class="num">6</span>Conclusão</h2>
+
+<p>Medimos separadamente três decisões que a receita corrente de adaptação de domínio trata como uma só, num desenho fatorial de 180 condições avaliadas contra gabarito itemizado oficial. Concluímos o seguinte. Notas de gêneros textuais distintos não devem ser agregadas em avaliação de adaptação de domínio, e a mesma cautela vale para subtarefas de natureza diferente dentro de um gênero. Texto bruto e material reestruturado são complementares, não substitutos: melhoram conjuntos de critérios que se sobrepõem pouco. E o pré-treino continuado, no domínio e na tarefa medidos, entrega predominantemente forma de documento, cobrando antes uma degradação que só o ajuste fino subsequente recupera.</p>
+
+<p>Reportamos as seguintes limitações. O regime de controle foi rodado nos seis blocos apenas no Tucano2 3,7B; nos outros três modelos ele cobre os extremos de volume, os blocos I e VI. Os dois corpora não são pareados em contagem de tokens, 59,43 contra 50,58 milhões, e a expansão inverte a composição por categoria, de modo que parte do efeito atribuído à forma pode ser mistura. E o corpus estruturado, gerado por um modelo-professor sem verificação de referência, contém citação processual fabricada que chega à saída do modelo treinado a uma taxa de 0,512%, contra 0,072% no controle; em valor absoluto é baixa, em direção é sistemática, e a correção pertence à próxima versão do corpus. O trabalho seguinte, já viabilizado pelo material construído, é treinar a condição combinada, com mistura em proporção fixa, treino em dois estágios e roteamento por gênero como as três formas a testar, e verificar quanto do teto medido aqui se converte em ganho real.</p>
+
+<h2><span class="num">7</span>Referências</h2>
+
+<ol class="refs">
+<li>Gururangan, S., Marasović, A., Swayamdipta, S., Lo, K., Beltagy, I., Downey, D., Smith, N. A. <i>Don't Stop Pretraining: Adapt Language Models to Domains and Tasks</i>. ACL, 2020.</li>
+<li>Chalkidis, I., Fergadiotis, M., Malakasiotis, P., Aletras, N., Androutsopoulos, I. <i>LEGAL-BERT: The Muppets straight out of Law School</i>. Findings of EMNLP, 2020.</li>
+<li>Colombo, P., Pires, T. P., Boudiaf, M. et al. <i>SaulLM-7B: A pioneering Large Language Model for Law</i>. arXiv:2403.03883, 2024.</li>
+<li>Pires, R., Almeida, T. S., Abonizio, H., Nogueira, R. <i>OABench</i>. Maritaca AI. <span class="idx">[conferir autoria, veículo e ano]</span></li>
+<li>Maritaca AI. <i>MagisBench</i>. <span class="idx">[conferir autoria, veículo e ano]</span></li>
+<li>Pacheco, E. C. B., Suriani, F. M., Ribeiro, R. <i>Rabula: A Benchmark for Evaluating LLMs in Brazilian Legal Tasks</i>. Proceedings of the First Argument Mining and Empirical Legal Research Workshop (AMELR 2025), CEUR-WS Vol-4089, paper 6, 2025.</li>
+<li>Zheng, L., Chiang, W.-L., Sheng, Y. et al. <i>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</i>. NeurIPS, 2023.</li>
+<li>Pacheco, E., Russo, C. M. <i>Juiz não é ranking: o que a tabela de classificação de corretores automáticos não consegue dizer</i>. Artigo companheiro, em preparação, 2026.</li>
+<li>Hu, E. J., Shen, Y., Wallis, P. et al. <i>LoRA: Low-Rank Adaptation of Large Language Models</i>. ICLR, 2022.</li>
+<li>Benjamini, Y., Hochberg, Y. <i>Controlling the False Discovery Rate</i>. Journal of the Royal Statistical Society B, 57(1), 289–300, 1995.</li>
+</ol>

@@ -1,0 +1,120 @@
+/* Artigo · identidade própria, distinta do relatório interno.
+   O relatório é vinho sobre papel quente e serve para varrer 43 tabelas; o artigo é
+   índigo sobre papel frio, coluna única, numeração de seção à margem — um objeto para
+   ler do começo ao fim, não para consultar. */
+:root{
+  --paper:#FBFAF8; --surface:#FFFFFF; --surface-2:#F3F1EC;
+  --ink:#1A1C20; --ink-2:#4A4E57; --ink-3:#787D87;
+  --rule:#DFDBD2; --rule-forte:#C6C1B5;
+  --accent:#2E4272; --accent-ink:#24345A; --accent-soft:#EAEDF5;
+  --pos:#1D6B4C; --neg:#9B3A31;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#13151A; --surface:#191C22; --surface-2:#20242B;
+    --ink:#E9E7E2; --ink-2:#B4B8C0; --ink-3:#868C97;
+    --rule:#2C3038; --rule-forte:#3C424C;
+    --accent:#9DB3E6; --accent-ink:#B9C9F0; --accent-soft:#1C2333;
+    --pos:#6FD3A4; --neg:#EC9187;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#13151A; --surface:#191C22; --surface-2:#20242B;
+  --ink:#E9E7E2; --ink-2:#B4B8C0; --ink-3:#868C97;
+  --rule:#2C3038; --rule-forte:#3C424C;
+  --accent:#9DB3E6; --accent-ink:#B9C9F0; --accent-soft:#1C2333;
+  --pos:#6FD3A4; --neg:#EC9187;
+}
+
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Source Serif 4",Charter,Georgia,serif;
+  font-size:17.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.folha{max-width:760px; margin:0 auto; padding:56px 26px 140px}
+
+/* ── frontispício */
+.eyebrow{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11.5px;
+  letter-spacing:.17em; text-transform:uppercase; color:var(--accent); margin:0 0 20px}
+h1{font-size:38px; line-height:1.16; font-weight:600; letter-spacing:-.012em;
+  text-wrap:balance; margin:0 0 14px}
+.sub{font-size:21px; line-height:1.45; color:var(--ink-2); margin:0 0 30px; max-width:34em}
+.autores{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:14.5px;
+  color:var(--ink); margin:0 0 4px}
+.afil{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13px;
+  color:var(--ink-3); margin:0 0 34px; line-height:1.55}
+
+.resumo{background:var(--surface); border:1px solid var(--rule);
+  border-left:3px solid var(--accent); border-radius:3px; padding:22px 24px; margin:0 0 14px}
+.resumo h2{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11.5px;
+  letter-spacing:.15em; text-transform:uppercase; color:var(--accent-ink);
+  margin:0 0 10px; border:0; padding:0}
+.resumo p{font-size:16px; line-height:1.6; margin:0 0 .8em}
+.resumo p:last-child{margin-bottom:0}
+.chaves{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13.5px;
+  color:var(--ink-2); margin:0 0 46px}
+.chaves b{color:var(--ink)}
+
+/* ── seções */
+h2{font-size:23px; font-weight:600; letter-spacing:-.008em; margin:52px 0 14px;
+  padding-top:14px; border-top:1px solid var(--rule); text-wrap:balance}
+h2 .num{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13px;
+  color:var(--accent); margin-right:.6em; font-weight:500}
+h3{font-size:17.5px; font-weight:600; margin:30px 0 8px; color:var(--ink)}
+h3 .num{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12.5px;
+  color:var(--ink-3); margin-right:.5em; font-weight:500}
+p{margin:0 0 1.05em}
+ul,ol{margin:0 0 1.05em; padding-left:1.4em}
+li{margin:0 0 .45em}
+b,strong{font-weight:600}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
+  background:var(--surface-2); padding:1px 5px; border-radius:3px}
+a{color:var(--accent-ink); text-underline-offset:3px}
+:root[data-theme="dark"] a,:root:not([data-theme="light"]) a{color:var(--accent)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) a{color:var(--accent-ink)}}
+
+.nota{background:var(--surface-2); border-radius:3px; padding:16px 18px;
+  font-size:15.5px; line-height:1.55; margin:0 0 1.2em}
+.nota b:first-child{color:var(--accent-ink)}
+:root[data-theme="dark"] .nota b:first-child{color:var(--accent)}
+
+/* ── tabelas */
+figure.tab{margin:30px 0; padding:0}
+figcaption{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13px;
+  line-height:1.5; color:var(--ink-2); margin:0 0 10px}
+figcaption b{color:var(--ink)}
+.rol{overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface)}
+table{border-collapse:collapse; width:100%;
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13px;
+  font-variant-numeric:tabular-nums}
+th{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3);
+  font-weight:500; background:var(--surface-2); white-space:nowrap}
+th,td{padding:7px 12px; text-align:left; border-bottom:1px solid var(--rule)}
+tbody tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right}
+.idx{color:var(--ink-3); font-size:11px; margin-left:6px}
+/* A coluna do bloco 0 e a linha do controle são referência de leitura, não resultado:
+   ficam recuadas, e o que se destaca é o melhor bloco de cada linha. */
+td.z{background:var(--surface-2); border-right:2px solid var(--rule)}
+tr.ctrl td{background:var(--surface-2)}
+tr.ctrl td:first-child{background:var(--surface)}
+td.melhor{font-weight:600; color:var(--accent-ink)}
+:root[data-theme="dark"] td.melhor{color:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) td.melhor{color:var(--accent)}}
+.up,.pos{color:var(--pos)} .dn,.neg{color:var(--neg)} .g{color:var(--ink-3)}
+.tnota{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12px;
+  color:var(--ink-3); line-height:1.5; margin:8px 0 0}
+
+/* ── referências */
+.refs{font-size:15px; line-height:1.55}
+.refs li{margin:0 0 .7em}
+
+@media print{
+  body{background:#fff; font-size:10.5pt}
+  .folha{max-width:none; padding:0}
+  h2{break-after:avoid} figure.tab{break-inside:avoid}
+  .rol{overflow:visible}
+  table{font-size:8.5pt}
+  th,td{padding:3px 6px}
+}
