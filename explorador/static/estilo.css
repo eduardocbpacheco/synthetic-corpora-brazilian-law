@@ -80,3 +80,37 @@ td.v{text-align:center;width:64px;font-family:"IBM Plex Mono",monospace;font-wei
 .resumo{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 12px;color:var(--ink2);font-size:13px}
 .resumo b{color:var(--ink);font-family:"IBM Plex Mono",monospace}
 .aviso{padding:40px 16px;text-align:center;color:var(--ink3)}
+
+/* ── régua de juízes e anotação cega */
+.barra { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap;
+         margin: 0 0 1.2rem; }
+.barra .dica { color: var(--suave, #6a6e77); font-size: .82rem; }
+table.regua { border-collapse: collapse; width: 100%; font-size: .84rem; }
+table.regua th, table.regua td { padding: .28rem .5rem; border-bottom: 1px solid #e8e7e3; }
+table.regua th { text-align: left; font-weight: 600; }
+table.regua .n { text-align: right; font-variant-numeric: tabular-nums; }
+table.regua .z { font-weight: 600; }
+table.regua .melhor { font-weight: 600; }
+table.regua tr.hl { background: #f6f5f1; }
+table.regua .tag { font-size: .7rem; color: #6a6e77; border: 1px solid #dcdbd6;
+                   border-radius: 3px; padding: 0 .25rem; }
+.rol { overflow-x: auto; }
+p.nota { color: #6a6e77; font-size: .84rem; margin: .2rem 0 .7rem; max-width: 62ch; }
+
+.cab { color: #6a6e77; font-size: .84rem; margin: 0 0 .8rem; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+@media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+.cols h3, .crit h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em;
+                     color: #6a6e77; margin: 0 0 .35rem; font-weight: 600; }
+.texto { white-space: pre-wrap; font-size: .88rem; line-height: 1.5; max-height: 22rem;
+         overflow-y: auto; }
+.crit { margin: 1.4rem 0; padding: .9rem 1rem; border: 1px solid #dcdbd6; border-radius: 4px;
+        background: #fbfaf7; }
+.crit .tit { font-weight: 600; margin: 0 0 .25rem; }
+.acoes { display: flex; gap: .6rem; }
+.acoes button { padding: .5rem 1.1rem; border: 1px solid #c9c7c1; border-radius: 4px;
+                background: #fff; cursor: pointer; font: inherit; font-size: .9rem; }
+.acoes .sim { border-color: #2e4272; color: #2e4272; font-weight: 600; }
+.acoes .nao { border-color: #8a3b2e; color: #8a3b2e; font-weight: 600; }
+.acoes button:hover { background: #f2f1ed; }
+.vazio { color: #6a6e77; }

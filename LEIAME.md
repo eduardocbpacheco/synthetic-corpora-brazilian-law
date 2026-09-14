@@ -38,6 +38,14 @@ depositados.
 É uma seleção curada, não o acervo de trabalho. Só está aqui o caminho que produziu o que
 está no artigo; o `REPRODUZIR.md` explica o que ficou de fora e por quê.
 
+## Explorar os resultados
+
+`explorador/` é uma aplicação local pequena, HTML, CSS e JavaScript servidos por Flask, sem
+etapa de build e sem login. Rode `python explorador/app.py` e abra o endereço que ele
+imprime. A vista `/condicoes` é a deste artigo: ela põe duas condições treinadas lado a lado
+na mesma questão e mostra onde, critério a critério, elas divergiram. As outras duas,
+`/regua` e `/anotar`, são do artigo irmão sobre medição e precisam do depósito daquele.
+
 ## Os dados
 
 Os corpora e os julgamentos **não** estão neste repositório. Somam cerca de 3 GB e vivem em

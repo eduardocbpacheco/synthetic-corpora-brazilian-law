@@ -79,8 +79,11 @@ CONTEUDO: list[tuple[str, str]] = [
     ("publicacao/artigo", "monta_artigo.py"), ("publicacao/artigo", "estilo.css"),
     ("publicacao/artigo", "artigo.pdf"),
     ("publicacao/jurix", "para_tex.py"), ("publicacao/jurix", "para_tex_en.py"),
-    ("publicacao/jurix", "*.tex"), ("publicacao/jurix", "*.cls"),
-    ("publicacao/jurix", "*.bst"), ("publicacao/jurix", "*.pdf"),
+    # Nomeados um a um, e nao por glob: a pasta jurix guarda tambem o artigo do
+    # benchmark, que tem repositorio proprio.
+    ("publicacao/jurix", "artigo.tex"), ("publicacao/jurix", "artigo_en.tex"),
+    ("publicacao/jurix", "artigo.pdf"), ("publicacao/jurix", "artigo_en.pdf"),
+    ("publicacao/jurix", "*.cls"), ("publicacao/jurix", "*.bst"),
 
     # ── ferramentas
     ("dataset", "*.py"), ("dataset", "*.md"), ("dataset/manifestos", "*.json"),
@@ -94,6 +97,9 @@ CONTEUDO: list[tuple[str, str]] = [
 # montagem, e o que só existisse lá seria apagado na passada seguinte.
 RAIZ_REPO = ("README.md", "LEIAME.md", "REPRODUCING.md", "REPRODUZIR.md",
              "LICENSE", ".gitignore")
+# De onde vem esse punhado de arquivos de raiz. E variavel porque ha um segundo
+# repositorio, o do artigo do benchmark, com a sua propria pasta de documentos.
+PASTA_RAIZ = RAIZ / "publicacao/repo"
 
 # Padrões de segredo. Preferem errar para o lado do alarme falso: um falso positivo custa
 # uma inspeção, um falso negativo custa uma credencial publicada.
@@ -189,8 +195,7 @@ def itens() -> list[tuple[Path, str]]:
 def main() -> None:
     # Os de raiz são varridos junto, mas copiados à parte: no laço comum eles virariam
     # arquivos chamados "(raiz) README.md", que foi o que aconteceu na primeira versão.
-    raiz = [(RAIZ / "publicacao/repo" / n, n)
-            for n in RAIZ_REPO if (RAIZ / "publicacao/repo" / n).exists()]
+    raiz = [(PASTA_RAIZ / n, n) for n in RAIZ_REPO if (PASTA_RAIZ / n).exists()]
     corpo = itens()
     alvos = corpo + raiz
     print(f"  {len(alvos)} arquivo(s) na lista de inclusão")
@@ -216,8 +221,14 @@ def main() -> None:
 
     if "--so-varrer" in sys.argv:
         return
+    # Limpa o conteudo, preserva o `.git`. A versao anterior apagava o destino inteiro, e
+    # com ele o historico e o remoto do repositorio ja publicado: uma montagem custava um
+    # `git clone` para recuperar o que so existia ali.
     if DESTINO.exists():
-        shutil.rmtree(DESTINO)
+        for item in DESTINO.iterdir():
+            if item.name == ".git":
+                continue
+            shutil.rmtree(item) if item.is_dir() else item.unlink()
     for p, rel in corpo:
         d = DESTINO / rel
         d.parent.mkdir(parents=True, exist_ok=True)

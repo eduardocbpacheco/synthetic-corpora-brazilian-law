@@ -16,6 +16,10 @@
 
 <p>Reportamos as seguintes limitações. O regime de controle foi rodado nos seis blocos apenas no Tucano2 3,7B; nos outros três modelos ele cobre os extremos de volume, os blocos I e VI. Os dois corpora não são pareados em contagem de tokens, 59,43 contra 50,58 milhões, e a expansão inverte a composição por categoria, de modo que parte do efeito atribuído à forma pode ser mistura. E o corpus estruturado, gerado por um modelo-professor sem verificação de referência, contém citação processual fabricada que chega à saída do modelo treinado a uma taxa de 0,512%, contra 0,072% no controle; em valor absoluto é baixa, em direção é sistemática, e a correção pertence à próxima versão do corpus. O trabalho seguinte, já viabilizado pelo material construído, é treinar a condição combinada, com mistura em proporção fixa, treino em dois estágios e roteamento por gênero como as três formas a testar, e verificar quanto do teto medido aqui se converte em ganho real.</p>
 
+<h2><span class="num"></span>Agradecimentos e declarações</h2>
+
+<p><b>Uso de IA generativa.</b> Modelos generativos aparecem neste trabalho em três papéis distintos, e só os dois primeiros são objeto de estudo. Eles geraram as camadas do corpus estruturado de pré-treino, conforme a Seção 3.1, e julgaram cada resposta contra o espelho oficial, conforme a Seção 3.4. Além disso, os autores usaram um modelo de linguagem para auxiliar na escrita do código de análise e de montagem do manuscrito, e na redação e tradução do texto, composto primeiro em português. Todo número aqui reportado é produzido pelo código depositado a partir dos julgamentos depositados, e não transcrito, e cada referência foi conferida contra a fonte primária. Os autores revisaram e editaram todo o conteúdo e assumem responsabilidade integral por ele.</p>
+
 <h2><span class="num">7</span>Referências</h2>
 
 <ol class="refs">
@@ -26,7 +30,11 @@
 <li>Maritaca AI. <i>MagisBench</i>. <span class="idx">[conferir autoria, veículo e ano]</span></li>
 <li>Pacheco, E. C. B., Suriani, F. M., Ribeiro, R. <i>Rabula: A Benchmark for Evaluating LLMs in Brazilian Legal Tasks</i>. Proceedings of the First Argument Mining and Empirical Legal Research Workshop (AMELR 2025), CEUR-WS Vol-4089, paper 6, 2025.</li>
 <li>Zheng, L., Chiang, W.-L., Sheng, Y. et al. <i>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</i>. NeurIPS, 2023.</li>
-<li>Pacheco, E., Russo, C. M. <i>Juiz não é ranking: o que a tabela de classificação de corretores automáticos não consegue dizer</i>. Artigo companheiro, em preparação, 2026.</li>
+<li>Pacheco, E., Russo, C. M. <i>Medindo a competência de LLMs no direito brasileiro</i>. Artigo companheiro, em preparação, 2026.</li>
 <li>Hu, E. J., Shen, Y., Wallis, P. et al. <i>LoRA: Low-Rank Adaptation of Large Language Models</i>. ICLR, 2022.</li>
 <li>Benjamini, Y., Hochberg, Y. <i>Controlling the False Discovery Rate</i>. Journal of the Royal Statistical Society B, 57(1), 289–300, 1995.</li>
+<li>Pacheco, E., Russo, C. M. <i>Paired raw and structured corpora for Brazilian legal domain adaptation</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739216.</li>
+<li>Pacheco, E., Russo, C. M. <i>Judgments of 180 trained conditions on a Brazilian Bar Examination benchmark</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739184.</li>
+<li>Pacheco, E., Russo, C. M. <i>Agreement of 31 candidate automatic judges against a human gold standard on Brazilian legal tasks</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739161.</li>
+<li>Pacheco, E. <i>Synthetic corpora in the adaptation of language models to Brazilian law</i> [Código-fonte]. github.com/eduardocbpacheco/synthetic-corpora-brazilian-law, 2026.</li>
 </ol>

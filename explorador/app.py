@@ -23,6 +23,7 @@ from flask import Flask, Response, jsonify, redirect, request, send_from_directo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dados
+import dados_benchmark
 
 AQUI = Path(__file__).resolve().parent
 ANOT = AQUI / "anotacoes"
@@ -126,6 +127,32 @@ def api_comparar():
         })
     saida["divergem"] = [c for c, vs in marcas.items() if len(vs) == 2 and vs[0] != vs[1]]
     return jsonify(saida)
+
+
+# ───────────────────────── a régua: quem julga e quem responde
+@app.get("/api/regua")
+def api_regua():
+    """Concordância dos juízes e nota dos respondentes na mesma tarefa, por área.
+
+    As duas metades vêm juntas de propósito: a pergunta que a vista existe para responder é
+    se quem julga bem também responde bem, e separá-las em duas chamadas convidaria a olhar
+    uma de cada vez.
+    """
+    tarefa = request.args.get("tarefa", "peca_merito")
+    if tarefa not in {a for a, _, _ in dados_benchmark.TAREFAS}:
+        return jsonify({"erro": "tarefa desconhecida"}), 400
+    d = dados_benchmark.regua(tarefa)
+    if not d["juizes"]:
+        return jsonify({"erro": "falta kappa_area.json; rode avaliacao/kappa_por_area.py"}), 503
+    return jsonify(d)
+
+
+@app.get("/api/anotar/proxima")
+def api_anotar_proxima():
+    it = dados_benchmark.item_para_anotar()
+    if it is None:
+        return jsonify({"erro": "não achei o conjunto de avaliação"}), 503
+    return jsonify(it)
 
 
 # ───────────────────────── anotação cega

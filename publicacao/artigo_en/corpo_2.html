@@ -41,7 +41,7 @@
 <li><b>VI</b> · 2,909, block IV plus block V: the complete corpus.</li>
 </ul>
 
-<p>Nesting was verified by comparing examples by content rather than by label, because a generated example inherits the identifier of the original that seeded it. II ⊂ III ⊂ IV ⊂ VI and I ⊂ IV, but <b>I and II are disjoint</b>, without a single example in common, as are I and III.</p>
+<p>Nesting was verified by content, not by label: II ⊂ III ⊂ IV ⊂ VI and I ⊂ IV, but <b>I and II are disjoint</b>, as are I and III.</p>
 
 <h3><span class="num">3.3</span>Factorial design and the three starting points</h3>
 
@@ -61,6 +61,6 @@
 
 <p>There are two judges, one per genre, chosen and fixed before any measurement of the 180 conditions: <b>Kimi K2.5</b> for discursive questions, with Cohen's agreement of <b>κ = 0.799</b> against the human gold standard, and <b>GPT-OSS 120B</b> for document writing, with <b>κ = 0.754</b>. For reference, agreement among the three human annotators is 0.789 on discursive questions and 0.763 on document writing.</p>
 
-<p>The board's rubric gives each document-writing criterion a title: Addressing, Party identification, Closing, Legal grounds, Requests. We grouped these titles into two classes: those of <b>form</b>, which demand the skeleton of the document and amount to 148 criteria and 14.9% of the points, and those of <b>merit</b>, which demand the legal argument and amount to 413 criteria and 85.1%. The titles are the board's; the grouping into two classes is ours, because the board names the requirement without classifying it. We report formal, merit and aggregate document scores whenever document writing is measured.</p>
+<p>The board's rubric gives each document-writing criterion a title: Addressing, Party identification, Closing, Legal grounds, Requests. We grouped these titles into two classes: those of <b>form</b>, which demand the skeleton of the document and amount to 148 criteria and 14.9% of the points, and those of <b>merit</b>, which demand the legal argument and amount to 413 criteria and 85.1%. The titles are the board's; the grouping is ours. We report formal, merit and aggregate document scores whenever document writing is measured.</p>
 
 <p>Conditions are compared by Wilcoxon signed-rank tests paired by question, with the three seeds stacked. Where the number of comparisons is large, Bonferroni and Benjamini-Hochberg corrections are applied [10].</p>

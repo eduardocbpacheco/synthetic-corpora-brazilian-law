@@ -38,6 +38,15 @@ no GPU and no API key: it recomputes every number in the paper from the deposite
 This is a curated selection, not the working archive. Only the path that produced what is in
 the paper is here; `REPRODUCING.md` explains what was left out and why.
 
+## Exploring the results
+
+`explorador/` is a small local application, plain HTML, CSS and JavaScript served by Flask,
+with no build step and no login. Run `python explorador/app.py` and open the address it
+prints. Its `/condicoes` view is the one for this paper: it puts two trained conditions
+side by side on the same question and shows where, criterion by criterion, they diverged.
+The other two views, `/regua` and `/anotar`, belong to the companion paper on measurement
+and need that paper's deposit.
+
 ## The data
 
 The corpora and the judgments are **not** in this repository. They total about 3 GB and live

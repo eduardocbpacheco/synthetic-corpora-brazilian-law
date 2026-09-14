@@ -100,6 +100,130 @@
     carrega(true);
   }
 
-  if (vista === 'condicoes') vistaCondicoes();
-  else raiz.innerHTML = '<p class="aviso">Em construção.</p>';
+
+  /* ── régua: os juízes contra o padrão-ouro, e os respondentes na mesma tarefa.
+   *
+   * Duas tabelas na mesma tela e no mesmo eixo de áreas. É a leitura que o artigo faz em
+   * duas tabelas separadas por limite de página; aqui não há limite, então ficam juntas.
+   */
+  // As mesmas abreviaturas do artigo. Cortar o nome em N letras produzia "CONSTI." e
+  // "TRABAL.", que ninguém escreve.
+  const ABREV = { 'administrativo': 'Adm.', 'civil': 'Civ.', 'constitucional': 'Const.',
+                  'empresarial': 'Empr.', 'penal': 'Pen.', 'trabalhista': 'Trab.',
+                  'tributário': 'Trib.' };
+
+  async function vistaRegua() {
+    const TAREFAS = [['peca_merito', 'peça · mérito'], ['peca_formal', 'peça · forma'],
+                     ['discursiva', 'questão discursiva']];
+    let tarefa = url.get('tarefa') || 'peca_merito';
+    raiz.innerHTML = `<div class="barra">
+      <label>tarefa <select id="tk">${TAREFAS.map(([v, r]) =>
+        `<option value="${v}"${v === tarefa ? ' selected' : ''}>${r}</option>`).join('')}</select></label>
+      <span class="dica">κ &times;100 · nota em % dos pontos da banca</span></div>
+      <div id="corpo"></div>`;
+    const corpo = $('#corpo');
+
+    const tabela = (titulo, nota, areas, linhas, fmt, extra) => `
+      <h2>${titulo}</h2><p class="nota">${nota}</p>
+      <div class="rol"><table class="regua">
+        <thead><tr><th>modelo</th>${areas.map(a =>
+          `<th class="n">${esc(ABREV[a] || a)}</th>`).join('')}<th class="n z">geral</th>${
+          extra ? '<th class="n">ampl.</th>' : ''}</tr></thead>
+        <tbody>${linhas.map(l => {
+          const vs = l.areas.filter(x => x !== null && x !== undefined);
+          const max = vs.length ? Math.max(...vs) : null;
+          return `<tr${l.producao ? ' class="hl"' : ''}><td><code>${esc(l.nome)}</code>${
+            l.producao ? ' <span class="tag">produção</span>' : ''}</td>${
+            l.areas.map(x => `<td class="n${x !== null && x === max ? ' melhor' : ''}">${
+              fmt(x)}</td>`).join('')}<td class="n z">${fmt(l.geral)}</td>${
+            extra ? `<td class="n">${fmt(l.ampl)}</td>` : ''}</tr>`;
+        }).join('')}</tbody></table></div>`;
+
+    async function carrega() {
+      corpo.innerHTML = '<p class="vazio">carregando…</p>';
+      const d = await api('/api/regua?tarefa=' + encodeURIComponent(tarefa));
+      if (d.erro) { corpo.innerHTML = `<p class="vazio">${esc(d.erro)}</p>`; return; }
+      const k = (x) => x === null || x === undefined ? '—' : Math.round(x * 100);
+      const n = (x) => x === null || x === undefined ? '—' : x.toFixed(1).replace('.', ',');
+      corpo.innerHTML =
+        tabela(`Concordância com o padrão-ouro humano · ${esc(d.rotulo)}`,
+               'κ de Cohen contra as decisões dos três juristas, por área do direito. '
+               + 'A coluna ampl. é a distância entre a melhor e a pior área do mesmo juiz.',
+               d.areas, d.juizes, k, true)
+        + tabela(`Nota dos mesmos modelos como respondentes · ${esc(d.rotulo)}`,
+                 'Percentual dos pontos da banca, ponderado pela pontuação de cada critério.',
+                 d.areas, d.respondentes, n, false);
+    }
+    $('#tk').onchange = (e) => { tarefa = e.target.value; guarda('tarefa', tarefa); carrega(); };
+    carrega();
+  }
+
+  /* ── anotar: decisão binária cega, para estender o padrão-ouro.
+   *
+   * A tela mostra enunciado, resposta e UM critério. Não mostra o gabarito do item, nem o
+   * veredito de nenhum juiz, nem o que outro anotador decidiu: qualquer um dos três
+   * transformaria a anotação numa conferência, que mede outra coisa.
+   */
+  async function vistaAnotar() {
+    let quem = localStorage.getItem('anotador') || '';
+    let atual = null, feitas = 0;
+    raiz.innerHTML = `<div class="barra">
+      <label>anotador <input id="quem" value="${esc(quem)}" placeholder="seu nome"></label>
+      <span class="dica" id="conta"></span></div><div id="cartao"></div>`;
+    const cartao = $('#cartao');
+
+    async function proxima() {
+      cartao.innerHTML = '<p class="vazio">carregando…</p>';
+      const d = await api('/api/anotar/proxima');
+      if (d.erro) { cartao.innerHTML = `<p class="vazio">${esc(d.erro)}</p>`; return; }
+      atual = d;
+      cartao.innerHTML = `
+        <p class="cab">${esc(d.genero)} · ${esc(d.area)} · exame ${esc(String(d.exame))}
+           · critério ${d.indice} de ${d.total_criterios}${
+             d.pontos ? ' · vale ' + String(d.pontos).replace('.', ',') : ''}</p>
+        <div class="cols">
+          <section><h3>enunciado</h3><div class="texto">${esc(d.enunciado)}</div></section>
+          <section><h3>resposta avaliada</h3><div class="texto">${
+            d.resposta ? esc(d.resposta) : '<i>sem resposta guardada para esta questão</i>'}</div></section>
+        </div>
+        <section class="crit"><h3>o critério</h3>
+          ${d.titulo_criterio ? `<p class="tit">${esc(d.titulo_criterio)}</p>` : ''}
+          <p class="texto">${esc(d.texto_criterio)}</p></section>
+        <div class="acoes">
+          <button id="sim" class="sim">cumpriu</button>
+          <button id="nao" class="nao">não cumpriu</button>
+          <button id="pula" class="pula">pular</button>
+        </div>`;
+      $('#sim').onclick = () => grava(1);
+      $('#nao').onclick = () => grava(0);
+      $('#pula').onclick = proxima;
+    }
+
+    async function grava(atendeu) {
+      quem = $('#quem').value.trim();
+      if (!quem) { $('#quem').focus(); return; }
+      localStorage.setItem('anotador', quem);
+      const r = await fetch('/api/anotacoes/' + encodeURIComponent(quem), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questao: atual.questao, criterio: atual.criterio, atendeu }),
+      }).then(x => x.json());
+      feitas = r.anotados ?? feitas + 1;
+      $('#conta').textContent = feitas + ' anotado(s)';
+      proxima();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || !atual) return;
+      if (e.key === 's' || e.key === 'S') grava(1);
+      if (e.key === 'n' || e.key === 'N') grava(0);
+    });
+    proxima();
+  }
+
+  /* Mapa, e não uma cadeia de `if`: com `else` pendurado no último `if`, toda vista que
+   * não fosse a última caía no aviso de "em construção" mesmo já estando escrita. */
+  const VISTAS = { condicoes: vistaCondicoes, regua: vistaRegua, anotar: vistaAnotar };
+  (VISTAS[vista] || (() => {
+    raiz.innerHTML = '<p class="aviso">Vista desconhecida.</p>';
+  }))();
 })();
