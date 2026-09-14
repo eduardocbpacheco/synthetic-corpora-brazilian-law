@@ -52,14 +52,21 @@ DEPOSITOS: dict[str, dict] = {
     },
     "benchmark-juizes": {
         "titulo": "Régua de 31 juízes automáticos contra padrão-ouro humano",
-        "versao": "1.0",
+        "versao": "1.1",
         "resumo": "Vereditos de 31 modelos candidatos a juiz sobre os 940 critérios do "
-                  "padrão-ouro, em até cinco repetições sob código congelado, mais as "
-                  "anotações dos três juristas.",
+                  "padrão-ouro, em até cinco repetições sob código congelado, as anotações "
+                  "dos três juristas, e as 105 questões com os seus critérios.",
         "licenca": "CC BY 4.0; padrão-ouro herdado do benchmark Rabula, mesma licença",
         "itens": [
             ("vereditos/", "rabula/consolidado/data/evaluations_v4", "*.json"),
             ("golden/", "rabula/consolidado/data/annotations", "*"),
+            # Faltavam na v1.0, e sem elas o deposito nao reproduz o artigo: os arquivos de
+            # veredito identificam o criterio por posicao, entao precisam do conjunto de
+            # questoes ao lado para serem lidos. Descoberto rodando a etapa de analise a
+            # partir do repositorio publicado, que e a unica forma de descobrir isto.
+            ("questoes/", "rabula/Reconstrucao/LLM-as-judge-in-BR-legal-domain/data/dfs/"
+                          "human_alignment_experiment", "*.pkl"),
+            ("questoes/", "data/oab", "benchmark_v2.jsonl"),
         ],
     },
     "codigo": {

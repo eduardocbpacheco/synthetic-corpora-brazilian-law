@@ -1,12 +1,12 @@
 {
  "titulo": "Régua de 31 juízes automáticos contra padrão-ouro humano",
- "versao": "1.0",
- "resumo": "Vereditos de 31 modelos candidatos a juiz sobre os 940 critérios do padrão-ouro, em até cinco repetições sob código congelado, mais as anotações dos três juristas.",
+ "versao": "1.1",
+ "resumo": "Vereditos de 31 modelos candidatos a juiz sobre os 940 critérios do padrão-ouro, em até cinco repetições sob código congelado, as anotações dos três juristas, e as 105 questões com os seus critérios.",
  "licenca": "CC BY 4.0; padrão-ouro herdado do benchmark Rabula, mesma licença",
  "deposito": "benchmark-juizes",
- "congelado_em": "2026-09-13 15:53:50",
- "arquivos": 47869,
- "bytes": 187495813,
+ "congelado_em": "2026-09-14 01:52:01",
+ "arquivos": 47872,
+ "bytes": 189430145,
  "itens": [
   {
    "caminho": "vereditos/rep1/alignment-claude-haiku-4-5/_proveniencia.json",
@@ -335090,6 +335090,27 @@
    "bytes": 37010,
    "linhas": null,
    "sha256": "0ba02c4689c6a93345bc0237bf10bdc5633ce1326e95ad6d29262256a681a797"
+  },
+  {
+   "caminho": "questoes/df_discursive_answers_4o_mini.pkl",
+   "origem": "rabula/Reconstrucao/LLM-as-judge-in-BR-legal-domain/data/dfs/human_alignment_experiment/df_discursive_answers_4o_mini.pkl",
+   "bytes": 819200,
+   "linhas": null,
+   "sha256": "79e53e338d3a033ca4a83dac45733f3c815543ee15fb1ee43a035cc6be0a33b8"
+  },
+  {
+   "caminho": "questoes/df_legal_document_writing_4o_mini.pkl",
+   "origem": "rabula/Reconstrucao/LLM-as-judge-in-BR-legal-domain/data/dfs/human_alignment_experiment/df_legal_document_writing_4o_mini.pkl",
+   "bytes": 536536,
+   "linhas": null,
+   "sha256": "d0bed0d5c2a1ad39f17fa445878f9323a9bf9697809909a0843c1325483aff21"
+  },
+  {
+   "caminho": "questoes/benchmark_v2.jsonl",
+   "origem": "data/oab/benchmark_v2.jsonl",
+   "bytes": 578596,
+   "linhas": 105,
+   "sha256": "78f617b220ba0bfca3bbcd5db479381c3fdab33669f7ae0f986137d351a0ac31"
   }
  ]
 }
