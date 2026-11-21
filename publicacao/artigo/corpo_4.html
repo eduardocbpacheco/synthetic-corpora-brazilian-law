@@ -4,17 +4,106 @@
 
 <p>A decomposição vale um passo além do gênero. Dentro da peça, forma e mérito respondem de modo diferente à mesma intervenção, e a nota agregada, que é 85,1% mérito, registra só um dos dois. Sempre que a tarefa avaliada se divide em subtarefas de natureza distinta, e o espelho de correção de uma banca examinadora é uma divisão pronta, a nota agregada é uma média ponderada que reflete a subtarefa mais numerosa e não necessariamente a que interessa.</p>
 
-<p>O segundo achado é que a forma do corpus é uma variável de projeto, não um detalhe de implementação. Reestruturar o material em fichas não é uniformemente melhor nem pior que usar o texto como ele é: cada forma ensina o que o seu material contém. A correlação de ρ = 0,30 entre os ganhos e a razão de mais de dois para um entre critérios exclusivos e compartilhados indicam que a escolha entre os dois está mal colocada como pergunta, e que o que interessa é a combinação, que não foi treinada aqui.</p>
+<p>O segundo achado é que a forma do corpus é uma variável de projeto, não um detalhe de implementação. Reestruturar o material em fichas não é uniformemente melhor nem pior que usar o texto como ele é: cada forma ensina o que o seu material contém. A correlação de ρ = 0,30 entre os ganhos e a razão de mais de dois para um entre critérios exclusivos e compartilhados sugerem que a escolha entre os dois pode ser a pergunta errada e que a combinação merece ser testada; ela não foi treinada aqui, e ganhos complementares em critérios distintos não garantem que um corpus misturado realize os dois.</p>
 
 <p>O terceiro tem implicação prática para quem constrói pipelines. O pré-treino continuado em texto jurídico bruto custa capacidade de formatar resposta antes de render qualquer coisa, e só se paga se houver ajuste fino suficiente depois. Relatos de pré-treino continuado que não medem o estado intermediário podem estar atribuindo à fase de pré-treino um ganho que é, em boa parte, capacidade de recuperação da fase seguinte.</p>
 
-<p>Quanto à escala, os resultados não são uniformes entre famílias, e a diferença acompanha a exposição prévia ao português mais do que o número de parâmetros. Os modelos com foco em português ganham nas duas tarefas; os multilíngues, que chegam com desempenho alto em questão discursiva, ganham muito na peça e perdem na discursiva. Isto é consistente com a hipótese de redundância: material adicional é informação nova para quem não a tinha e competição por capacidade para quem já a tinha.</p>
+<p>Quanto à escala, o desenho não a separa da família. Os modelos com foco em português ganham nas duas tarefas; os multilíngues, que chegam com desempenho alto em questão discursiva, ganham muito na peça e perdem na discursiva. Uma hipótese é a de redundância: material adicional é informação nova para quem não a tinha e competição por capacidade para quem já a tinha. O Tucano2 tem a arquitetura do Qwen3, de modo que rodar o Qwen3 nos tamanhos do Tucano2 a testaria diretamente.</p>
 
 <h2><span class="num">6</span>Conclusão</h2>
 
-<p>Medimos separadamente três decisões que a receita corrente de adaptação de domínio trata como uma só, num desenho fatorial de 180 condições avaliadas contra gabarito itemizado oficial. Concluímos o seguinte. Notas de gêneros textuais distintos não devem ser agregadas em avaliação de adaptação de domínio, e a mesma cautela vale para subtarefas de natureza diferente dentro de um gênero. Texto bruto e material reestruturado são complementares, não substitutos: melhoram conjuntos de critérios que se sobrepõem pouco. E o pré-treino continuado, no domínio e na tarefa medidos, entrega predominantemente forma de documento, cobrando antes uma degradação que só o ajuste fino subsequente recupera.</p>
+<p>Medimos separadamente três decisões que a receita corrente de adaptação de domínio trata como uma só, num desenho fatorial incompleto de 180 condições avaliadas contra gabarito itemizado oficial. Concluímos o seguinte. Notas de gêneros textuais distintos não devem ser agregadas em avaliação de adaptação de domínio, e a mesma cautela vale para subtarefas de natureza diferente dentro de um gênero. Texto bruto e material reestruturado não são substitutos: melhoram conjuntos de critérios que se sobrepõem pouco, e se uma mistura realiza os dois ganhos ainda não foi testado. E o pré-treino continuado, no domínio e na tarefa medidos, entrega predominantemente forma de documento, cobrando antes uma degradação que só o ajuste fino subsequente recupera.</p>
 
-<p>Reportamos as seguintes limitações. O regime de controle foi rodado nos seis blocos apenas no Tucano2 3,7B; nos outros três modelos ele cobre os extremos de volume, os blocos I e VI. Os dois corpora não são pareados em contagem de tokens, 59,43 contra 50,58 milhões, e a expansão inverte a composição por categoria, de modo que parte do efeito atribuído à forma pode ser mistura. E o corpus estruturado, gerado por um modelo-professor sem verificação de referência, contém citação processual fabricada que chega à saída do modelo treinado a uma taxa de 0,512%, contra 0,072% no controle; em valor absoluto é baixa, em direção é sistemática, e a correção pertence à próxima versão do corpus. O trabalho seguinte, já viabilizado pelo material construído, é treinar a condição combinada, com mistura em proporção fixa, treino em dois estágios e roteamento por gênero como as três formas a testar, e verificar quanto do teto medido aqui se converte em ganho real.</p>
+<p>Reportamos as seguintes limitações. O regime de controle foi rodado nos seis blocos apenas no Tucano2 3,7B; nos outros três modelos ele cobre os extremos de volume, os blocos I e VI. Os dois corpora têm tamanhos diferentes, 59,43 contra 50,58 milhões de tokens, e o treino igualou o orçamento truncando o estruturado. A expansão também inverte a composição por categoria e acrescenta camadas geradas, de modo que a comparação na grade congelada é entre dois pacotes de corpus; a Seção 4.6 trata disso com um par de orçamento de tokens e composição por categoria idênticos, no teto viável de 22,35 milhões de tokens, e constata que o formato de ficha ganha na forma do documento, de modo que essa parte do contraste é formato, não mistura. Tamanho e família do modelo variam juntos. Uma limitação mais consequente é a cobertura: na grade congelada só 6 dos 80 diplomas de referência atingiam cobertura plena no braço de ficha, e a Seção 4.6 mostra que completá-la inverte a ordem no formal; essa correção foi rodada apenas no Tucano2 3,7B, nos blocos I e VI, de modo que a ordem reportada nas tabelas principais para os outros três modelos e para os blocos II a V não foi remedida sobre o corpus corrigido. O pré-treino rodou uma única vez por regime e modelo, de modo que a variação entre sementes cobre só o ajuste fino. Nos modelos Qwen3 a janela de 3.072 tokens trunca um quarto das peças do D5 no fecho, o que pode rebaixar as suas notas formais. E o corpus estruturado, gerado por um modelo-professor sem verificação de referência, contém citação processual fabricada que chega à saída do modelo treinado a uma taxa de 0,512%, contra 0,072% no controle; em valor absoluto é baixa, em direção é sistemática, e a correção pertence à próxima versão do corpus. O trabalho seguinte, já viabilizado pelo material construído, é treinar a condição combinada, com mistura em proporção fixa, treino em dois estágios e roteamento por gênero como as três formas a testar, e verificar quanto do teto medido aqui se converte em ganho real.</p>
+
+<h2><span class="num"></span>Apêndice A. Uma ficha e a sua contraparte bruta</h2>
+
+<p>O mesmo dispositivo nos dois regimes de pré-treino: o artigo 1º da Lei Complementar paulista 731/1993, sobre o sistema retribuitório das polícias estaduais. No braço bruto ele aparece dentro de um bloco da lei, depois de um cabeçalho de uma linha, gerado por modelo, que nomeia a lei, e de um resumo dela; os artigos seguem como publicados. No braço estruturado o artigo é o nó-âncora de uma ficha, seguido de camadas geradas que apontam para ele pelo identificador. Os dois trechos estão cortados; a ficha inteira tem 5.625 caracteres.</p>
+
+<p>Braço bruto, início do bloco e o artigo:</p>
+<pre>&lt;&lt;LEI|BRUTO|LC SP 731/1993&gt;&gt;
+[LEI] Compens. Faz. Estadual SP (LC SP 731/1993)
+[RESUMO DA LEI] A norma estabelece e regula os vencimentos e as vantagens pecuniárias dos integrantes da Polícia Civil e da Polícia Militar do Estado de São Paulo. Seu objetivo é fixar a remuneração e as condições financeiras dessas carreiras, estabelecendo os valores e padrões salariais vigentes.
+[ARTIGOS NESTE BLOCO] Artigo 16 a artigo 2  (parte 3/6)
+[…]
+Artigo 1° - O sistema retribuitório ora instituído será aplicado aos atuais integrantes da Polícia Civil e da Polícia Militar, que por ele optarem mediante requerimento dirigido ao Delegado Geral de Polícia ou ao Comandante Geral da Polícia Militar, protocolado dentro de 180 (cento e oitenta) dias, contados da data da publicação desta lei complementar.
+Parágrafo único - Os efeitos da opção retroagirão a 1° de janeiro de 1993.
+[…]</pre>
+
+<p>Braço estruturado, a ficha (trechos de cada nó):</p>
+<pre>&lt;&lt;ID=SP731-1993:ART:0001|DOC=SP731-1993|TYPE=ART|PARENT=SP731-1993&gt;&gt;
+[NORMA]
+Compensação Financeira da Polícia Civil e Militar do Estado de São Paulo — Lei Complementar n° 731/1993, Artigo 1°.
+
+[CONTEÚDO]
+Artigo 1° - O sistema retribuitório ora instituído será aplicado aos atuais integrantes da Polícia Civil e da Polícia Militar, que por ele optarem mediante requerimento dirigido ao Delegado Geral de Polícia ou ao Comandante Geral da Polícia Militar, protocolado dentro de 180 (cento e oitenta) dias, contados da data da publicação desta lei complementar.
+Parágrafo único - Os efeitos da opção retroagirão a 1° de janeiro de 1993.
+
+&lt;&lt;ID=SP731-1993:ART:0001:EXPL|DOC=SP731-1993|TYPE=EXPL|PARENT=SP731-1993:ART:0001&gt;&gt;
+[EXPLICAÇÃO]
+1. Objeto Normativo:
+   O artigo institui um sistema retribuitório (remuneratório ou de compensação financeira) para policiais civis e militares do Estado de São Paulo, condicionando sua aplicação à opção individual dos servidores. Trata-se de um benefício optativo, não automático, vinculado a um requerimento formal.
+
+2. Sujeitos:
+   - Ativos: Policiais civis e militares em exercício na data da publicação da lei (não […]
+
+&lt;&lt;ID=SP731-1993:ART:0001:SYN|DOC=SP731-1993|TYPE=SYN|PARENT=SP731-1993:ART:0001&gt;&gt;
+[SÍNTESE]
+O artigo estabelece um sistema de compensação financeira optativo para policiais civis e militares do Estado de São Paulo, exigindo requerimento formal em até 180 dias da publicação da lei, com efeitos retroativos a 1° de janeiro de 1993. Importa por delimitar direitos subjetivos dos servidores, evitar litígios e assegurar transparência na concessão de benefícios remuneratórios.
+
+&lt;&lt;ID=SP731-1993:ART:0001:REL|DOC=SP731-1993|TYPE=REL|PARENT=SP731-1993:ART:0001&gt;&gt;
+[RELAÇÃO COM OUTRAS NORMAS]
+1. SP731-1993:ART:0002 (Art. 2°) — Relação de complementaridade: Define os critérios para cálculo da compensação financeira, detalhando como será apurado o valor devido aos servidores que optarem pelo sistema.
+2. SP731-1993:ART:0003 (Art. 3°) — Relação de condicionamento: Estabelece que a opção é […]
+
+&lt;&lt;ID=SP731-1993:ART:0001:EFFECT|DOC=SP731-1993|TYPE=EFFECT|PARENT=SP731-1993:ART:0001&gt;&gt;
+[EFEITO PRÁTICO]
+1. Condutas Orientadas:
+   - Servidores: Devem protocolar requerimento dentro do prazo para garantir o benefício, sob pena de decadência do direito.
+   - Administração Pública: Obrigada a processar os requerimentos e calcular os valores retroativos, com […]</pre>
+
+<h2><span class="num"></span>Apêndice B. Exemplos de critérios do espelho</h2>
+
+<p>Os 940 critérios são asserções binárias extraídas dos espelhos oficiais das bancas, cada uma com a pontuação que a banca lhe atribui. Uma questão discursiva tem poucos critérios; a questão de direito administrativo do 41º Exame tem quatro:</p>
+<ul>
+<li>A-I, 0,50 pontos: Não. A concessão de aposentadoria configura ato complexo que só estará perfeito após pronunciamento da Corte de Contas</li>
+<li>A-II, 0,10 pontos: nos termos do Art. 71, inciso III, da CRFB/88 ou Súmula Vinculante nº 3</li>
+<li>B-I, 0,55 pontos: Não. O contraditório e a ampla defesa são assegurados no Tribunal de Contas da União quando da decisão puder resultar anulação ou revogação de ato administrativo, excetuada a apreciação de legalidade do ato de concessão inicial de aposentadoria, reforma e pensão</li>
+<li>B-II, 0,10 pontos: consoante a Súmula Vinculante nº 3</li>
+</ul>
+
+<p>Uma peça tem muitos. A peça de direito administrativo do 41º Exame, um mandado de segurança contra ato de comissão de licitação, tem 29; uma amostra, com a classe que atribuímos pelo título da banca:</p>
+<ul>
+<li>Forma, 0,10 pontos, título “Endereçamento”: A peça deve ser endereçada ao Juízo da Vara Cível ou da Vara de Fazenda Pública da Comarca do Município Alfa</li>
+<li>Forma, 0,10 pontos, título “Qualificação das partes”: Impetrante: sociedade empresária XYZ</li>
+<li>Mérito, 0,10 pontos, título “Cabimento”: Houve violação a direito líquido e certo</li>
+<li>Mérito, 0,10 pontos, título “Cabimento”: nos termos do Art. 5º, inciso LXIX, da CRFB/88, ou do Art. 1º da Lei nº 12.016/2009</li>
+<li>Mérito, 0,50 pontos, título “Fundamentação”: O prazo mínimo para apresentação de propostas, contados a partir da data de divulgação do edital de licitação, é de 08 (oito) dias úteis, quando adotado o critério de julgamento de menor preço</li>
+<li>Mérito, 0,10 pontos, título “Fundamentação”: nos termos do Art. 55, inciso I, alínea a, da Lei nº 14.133/2021</li>
+<li>Forma, 0,10 pontos, título “Fechamento”: Local, data, advogado e inscrição OAB</li>
+</ul>
+
+<h2><span class="num"></span>Apêndice C. Uma questão da primeira fase convertida para o conjunto D3</h2>
+
+<p>O conjunto D3 parte de questões de múltipla escolha da primeira fase. O modelo-professor (Mistral Large 3) recebe o enunciado, as alternativas e o gabarito, e escreve uma pergunta aberta sobre os mesmos fatos e uma resposta que desenvolve a alternativa correta. O original, 37º Exame, questão 4:</p>
+<pre>A advogada Celina celebrou com a cliente Camila um contrato de prestação de serviços advocatícios. Na cláusula X, foi disposto que a extensão do patrocínio é limitada ao primeiro grau de jurisdição. Na cláusula W, foi disposto valor diverso de honorários contratuais para a hipótese de a causa encerrar-se por acordo. Considerando o informado sobre o contrato realizado, de acordo com o Código de Ética e Disciplina da OAB, assinale a afirmativa correta.
+(A) A cláusula X é vedada, pois não se admite tal limitação de atuação em grau de jurisdição. A cláusula W também é vedada, pois não se admite a previsão de valores diversos de honorários em caso de acordo.
+(B) O conteúdo da cláusula W, com disposição de valor diverso de honorários contratuais para a hipótese de a causa encerrar-se por acordo pode ser incluído no contrato sem que isso implique ilegalidade. A limitação de atuação em grau de jurisdição prevista na mencionada cláusula X encontra vedação legal.
+(C) A cláusula X é permitida. Por sua vez, a cláusula W é vedada, pois não se admite a previsão de valores diversos de honorários em caso de acordo.
+(D) As duas cláusulas narradas não violam a disciplina do citado Código de Ética e Disciplina da OAB.
+Gabarito: D</pre>
+
+<p>O enunciado convertido e a resposta gerada, como entram no ajuste fino. A resposta é reproduzida como foi gerada; as suas citações não foram conferidas contra o Código, como em todo conjunto gerado (Seção 6).</p>
+<pre>A advogada Celina celebrou contrato de prestação de serviços advocatícios com sua cliente Camila. O instrumento contratual estabeleceu, na cláusula X, que o patrocínio da causa seria limitado ao primeiro grau de jurisdição, não abrangendo eventuais recursos. Na cláusula W, foi fixado valor diferenciado de honorários contratuais para a hipótese de a demanda ser encerrada por acordo entre as partes.
+
+Considerando o caso narrado e as normas do Código de Ética e Disciplina da OAB, responda:
+
+(a) Analise a validade da cláusula X, que limita o patrocínio ao primeiro grau de jurisdição, à luz dos princípios éticos e das disposições aplicáveis.
+
+(b) Avalie a licitude da cláusula W, que prevê honorários diferenciados em caso de acordo, destacando os limites éticos e legais para tal previsão.</pre>
+<pre>(a) A cláusula X, que limita o patrocínio da advogada Celina ao primeiro grau de jurisdição, não viola as disposições do Código de Ética e Disciplina da OAB. O art. 35, § 1º, do referido Código estabelece que os honorários advocatícios devem ser fixados com moderação, considerando, entre outros fatores, o grau de zelo do profissional e o trabalho realizado. A limitação do patrocínio a uma instância específica é uma questão de natureza contratual, desde que não implique abandono da causa ou prejuízo ao cliente. O art. 12 do Código de Ética reforça que o advogado não deve deixar ao desamparo o cliente, mas isso não impede a pactuação de limites objetivos para a atuação profissional, desde que devidamente esclarecidos e aceitos pela cliente. Assim, a cláusula é válida, pois não configura renúncia ao patrocínio de forma abusiva ou antiética.
+
+(b) A cláusula W, que prevê honorários diferenciados em caso de encerramento da causa por acordo, também não viola as normas éticas da OAB. O art. 35, caput, do Código de Ética e Disciplina da OAB permite a fixação de honorários contratuais com base em critérios como a complexidade da causa, o tempo despendido e o resultado obtido. A previsão de valores distintos para situações específicas, como a celebração de acordo, é compatível com a liberdade contratual e a moderação exigida pelo art. 35, § 1º. Além disso, o art. 36 do mesmo Código veda a cobrança de honorários excessivos ou abusivos, mas não impede a diferenciação de valores em razão de circunstâncias concretas, como a economia de tempo e recursos decorrente de um acordo. Portanto, a cláusula é lícita, desde que os valores pactuados não sejam desproporcionais ou lesivos ao cliente, o que não parece ocorrer no caso apresentado.</pre>
 
 <h2><span class="num"></span>Agradecimentos e declarações</h2>
 
@@ -26,15 +115,21 @@
 <li>Gururangan, S., Marasović, A., Swayamdipta, S., Lo, K., Beltagy, I., Downey, D., Smith, N. A. <i>Don't Stop Pretraining: Adapt Language Models to Domains and Tasks</i>. ACL, 2020.</li>
 <li>Chalkidis, I., Fergadiotis, M., Malakasiotis, P., Aletras, N., Androutsopoulos, I. <i>LEGAL-BERT: The Muppets straight out of Law School</i>. Findings of EMNLP, 2020.</li>
 <li>Colombo, P., Pires, T. P., Boudiaf, M. et al. <i>SaulLM-7B: A pioneering Large Language Model for Law</i>. arXiv:2403.03883, 2024.</li>
-<li>Pires, R., Almeida, T. S., Abonizio, H., Nogueira, R. <i>OABench</i>. Maritaca AI. <span class="idx">[conferir autoria, veículo e ano]</span></li>
-<li>Maritaca AI. <i>MagisBench</i>. <span class="idx">[conferir autoria, veículo e ano]</span></li>
-<li>Pacheco, E. C. B., Suriani, F. M., Ribeiro, R. <i>Rabula: A Benchmark for Evaluating LLMs in Brazilian Legal Tasks</i>. Proceedings of the First Argument Mining and Empirical Legal Research Workshop (AMELR 2025), CEUR-WS Vol-4089, paper 6, 2025.</li>
+<li>Malaquias Junior, R., Pires, R., Romero, R., Nogueira, R. <i>Juru: Legal Brazilian Large Language Model from Reputable Sources</i>. arXiv:2403.18140, 2024.</li>
+<li>Cheng, D., Huang, S., Wei, F. <i>Adapting Large Language Models via Reading Comprehension</i>. ICLR, 2024.</li>
+<li>Maini, P., Seto, S., Bai, H., Grangier, D., Zhang, Y., Jaitly, N. <i>Rephrasing the Web: A Recipe for Compute and Data-Efficient Language Modeling</i>. ACL, 2024.</li>
+<li>Yang, Z., Band, N., Li, S., Candès, E., Hashimoto, T. <i>Synthetic Continued Pretraining</i>. ICLR, 2025.</li>
+<li>Pires, R., Malaquias Junior, R., Nogueira, R. <i>Automatic Legal Writing Evaluation of LLMs</i>. ICAIL '25: Proceedings of the Twentieth International Conference on Artificial Intelligence and Law, 420–424, 2025. doi:10.1145/3769126.3769227.</li>
+<li>Pires, R., Sales Almeida, T., Larcher Junior, C., Bonás, G., Abonizio, H., Piau, M., Malaquias Junior, R., Laitz, T., Nogueira, R. <i>Magis-Bench: Evaluating LLMs on Magistrate-Level Legal Tasks</i>. arXiv:2605.08437, 2026.</li>
+<li>Pacheco, E. C. B., Suriani, F. M., Ribeiro, R. <i>Rabula: A Benchmark for Evaluating LLMs in Brazilian Legal Tasks</i>. Proceedings of the First Argument Mining and Empirical Legal Research Workshop (AMELR 2025), CEUR Workshop Proceedings, vol. 4089, paper 6, 2025.</li>
 <li>Zheng, L., Chiang, W.-L., Sheng, Y. et al. <i>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</i>. NeurIPS, 2023.</li>
-<li>Pacheco, E., Russo, C. M. <i>Medindo a competência de LLMs no direito brasileiro</i>. Artigo companheiro, em preparação, 2026.</li>
+<li>Pacheco, E., Russo, C. M. <i>Medindo a competência de LLMs no direito brasileiro: responder, redigir e julgar</i>. Artigo companheiro, em preparação, 2026.</li>
 <li>Hu, E. J., Shen, Y., Wallis, P. et al. <i>LoRA: Low-Rank Adaptation of Large Language Models</i>. ICLR, 2022.</li>
 <li>Benjamini, Y., Hochberg, Y. <i>Controlling the False Discovery Rate</i>. Journal of the Royal Statistical Society B, 57(1), 289–300, 1995.</li>
 <li>Pacheco, E., Russo, C. M. <i>Paired raw and structured corpora for Brazilian legal domain adaptation</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739216.</li>
 <li>Pacheco, E., Russo, C. M. <i>Judgments of 180 trained conditions on a Brazilian Bar Examination benchmark</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739184.</li>
 <li>Pacheco, E., Russo, C. M. <i>Agreement of 31 candidate automatic judges against a human gold standard on Brazilian legal tasks</i>, v1.0 [Conjunto de dados]. Zenodo, 2026. doi:10.5281/zenodo.22739161.</li>
 <li>Pacheco, E. <i>Synthetic corpora in the adaptation of language models to Brazilian law</i> [Código-fonte]. github.com/eduardocbpacheco/synthetic-corpora-brazilian-law, 2026.</li>
+<li>Guo, Y., Fu, J., Zhang, H., Zhao, D., Shen, Y. <i>Efficient Continual Pre-training by Mitigating the Stability Gap</i>. arXiv:2406.14833, 2024.</li>
+<li>Ibrahim, A., Thérien, B., Gupta, K., Richter, M. L., Anthony, Q., Lesort, T., Belilovsky, E., Rish, I. <i>Simple and Scalable Strategies to Continually Pre-train Large Language Models</i>. Transactions on Machine Learning Research, 2024.</li>
 </ol>

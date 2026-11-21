@@ -85,7 +85,13 @@ def main() -> None:
                          "GPT-OSS 120B têm 100 RPM on-demand (medido em 21/08), e a "
                          "4 workers usávamos 13% disso")
     ap.add_argument("--saida", default=None)
+    ap.add_argument("--res", default=None,
+                    help="pasta de caches e saídas; a regeração do D-1 usa "
+                         "avaliacao/resultados_t3k")
     args = ap.parse_args()
+    global RES
+    if args.res:
+        RES = ROOT / args.res
 
     if not BENCH.exists():
         raise SystemExit(f"benchmark ausente: {BENCH}\n"

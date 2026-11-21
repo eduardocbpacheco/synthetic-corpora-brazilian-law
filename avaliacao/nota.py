@@ -14,10 +14,37 @@ que e justamente onde o pre-treino mais mexe. As tres saem sempre juntas.
 """
 from __future__ import annotations
 
-import collections, json, statistics as st
+import collections, json, os, statistics as st
 from pathlib import Path
 
 RES = Path(__file__).resolve().parent / "resultados"
+# Regeração das peças com teto de 3.000 tokens (achado D-1, nov/2026): as discursivas
+# continuam vindo de RES, e as peças passam a vir desta pasta quando a variável aponta
+# para ela e a condição já foi regerada. Sem a variável, tudo sai como na submissão.
+PECAS = os.environ.get("NOTA_PECAS")
+PECAS = (Path(__file__).resolve().parent.parent / PECAS) if PECAS else None
+
+
+# O bloco 0 e as bases do Qwen3 tinham saído com o raciocínio ligado (achado D-2): ~2.500
+# caracteres de <think> antes da resposta, dentro do mesmo orçamento. Esses foram regerados
+# por inteiro, discursivas também, e o arquivo novo traz os dois gêneros. Quando traz, as
+# discursivas vêm dele; nas demais condições só as peças foram refeitas.
+_TEM_DISC: dict[Path, bool] = {}
+
+
+def _tem_discursiva(f: Path) -> bool:
+    if f not in _TEM_DISC:
+        with open(f, encoding="utf-8") as fh:
+            _TEM_DISC[f] = any('"discursiva"' in l for l in fh)
+    return _TEM_DISC[f]
+
+
+def _arquivo(cond: str, tarefa: str) -> Path:
+    if PECAS:
+        f = PECAS / f"{cond}_partes.jsonl"
+        if f.exists() and (tarefa.startswith("peca") or _tem_discursiva(f)):
+            return f
+    return RES / f"{cond}_partes.jsonl"
 
 MODELOS = ["1.5B", "3.7B", "8B", "14B"]
 NOME = {"1.5B": "Tucano 1,5B", "3.7B": "Tucano 3,7B", "8B": "Qwen3 8B", "14B": "Qwen3 14B"}
@@ -56,7 +83,7 @@ def nota(cond: str, tarefa: str, area: str | None = None) -> float | None:
     Media por execucao das medias por questao — nao media simples sobre criterios, que
     daria mais peso as questoes com mais itens no espelho.
     """
-    f = RES / f"{cond}_partes.jsonl"
+    f = _arquivo(cond, tarefa)
     if not f.exists():
         return None
     acc: dict = collections.defaultdict(lambda: [0.0, 0.0])
@@ -86,6 +113,9 @@ def nota(cond: str, tarefa: str, area: str | None = None) -> float | None:
 # modelo base, porque nao houve tratamento nenhum ate ali.
 FAM_CPT = {"1.5B": "t15", "3.7B": "t37", "8B": "q8", "14B": "qwen14b"}
 SEM_BLOCO0 = {"1.5B": 42, "3.7B": 42, "8B": 43, "14B": 42}
+# Na regeração o bloco 0 do 8B sai da semente 42, a mesma dos outros três (achado D-3).
+if PECAS:
+    SEM_BLOCO0["8B"] = 42
 
 
 def cond_bloco0(modelo: str, regime: str) -> str:
@@ -112,7 +142,7 @@ def media_sementes(bloco: str, regime: str, modelo: str, tarefa: str,
 def por_questao(cond: str, tarefa: str) -> dict[str, float]:
     """Nota media por questao, para os testes pareados."""
     acc: dict = collections.defaultdict(lambda: [0.0, 0.0])
-    f = RES / f"{cond}_partes.jsonl"
+    f = _arquivo(cond, tarefa)
     if not f.exists():
         return {}
     with f.open(encoding="utf-8") as fh:

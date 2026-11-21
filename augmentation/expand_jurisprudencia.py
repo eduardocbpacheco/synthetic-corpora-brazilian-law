@@ -21,6 +21,7 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -246,14 +247,50 @@ def carregar_stj_acordaos(limite: int | None = None) -> list[dict]:
     if limite:
         itens = itens[:limite]
 
+    # O número do processo mora no CORPO da nota ("Processo REsp 2.195.921-AL , Rel. ..."),
+    # e o campo `processo` do coletor fica vazio em 4.033 das 4.093 — é o mesmo defeito que
+    # o C1 encontrou. A consequência aqui era grave e dupla.
+    #
+    # Primeira: o identificador caía no fallback `str(hash(texto))[-8:]`. Isso não é id de
+    # banco, é hash do Python, e o hash de `str` é ALEATORIZADO por execução: rodar de novo
+    # produzia outro identificador para a mesma nota. As 4.195 fichas existentes têm
+    # identidade irreprodutível, e é por isso que nenhum dos seus ids aparece na semente.
+    #
+    # Segunda: sem o processo, a ficha não sabe QUAL julgado ela ficha, e o braço bruto —
+    # que identifica pelo processo — não tem como parear com ela. É a metade do B1 que
+    # sobrou depois de a legislação chegar a 100%.
+    #
+    # Agora o processo sai do texto, e o fallback é sha1, que é estável.
+    # O informativo escreve a cadeia de incidentes antes da classe: "Processo AgRg no HC
+    # 1.080.161-RS". A classe do PROCESSO é a última antes do número — o agravo regimental
+    # é fase, não processo — e é assim que o braço bruto e a conferência de pareamento a
+    # leem. Sem aceitar o prefixo, 385 notas ficavam sem identidade e caíam no sha1.
+    RX_PROC = re.compile(r"Processo\s+(?:(?:AgRg|AgInt|EDcl|EAREsp|RCD|QO)\s+n[oa]\s+)*"
+                         r"([A-Za-zÇç]{1,8})\s*([\d][\d.]*)\s*[-/]\s*([A-Z]{2})")
     registros = []
     for i in itens:
-        proc   = i.get("processo", "") or ""
-        num    = re.sub(r"[^\d]", "", proc)[:10] or str(hash(i["texto"]))[-8:]
-        juris_id = f"JURIS:STJ:INFJ:{i.get('informativo',0):04d}:{num}"
+        texto_nota = i.get("texto", "") or ""
+        proc = (i.get("processo") or "").strip()
+        if not proc:
+            m = RX_PROC.search(texto_nota[:400])
+            if m:
+                proc = f"{m.group(1)} {m.group(2)}/{m.group(3)}"
+        # A FORMA do identificador tem de ser a mesma dos outros: JURIS:{tribunal}:{classe}:
+        # {número}. Com o informativo no meio — JURIS:STJ:INFJ:0890:2195921 — a conferência
+        # de pareamento lê "INFJ" como classe e "0890" como número do processo, e o casamento
+        # cai de 97,7% para 56,4%. O informativo é metadado da nota, não identidade do
+        # julgado, e passa a viver em campo próprio.
+        m_cl = re.match(r"\s*([A-Za-zÇç]+)", proc)
+        classe = (m_cl.group(1).upper() if m_cl else "INFJ")
+        num = re.sub(r"[^\d]", "", proc)[:10] or hashlib.sha1(
+            texto_nota.encode("utf-8")).hexdigest()[:8]
+        juris_id = f"JURIS:STJ:{classe}:{num}"
 
-        documento = i.get("texto", "")
-        tipo = "Acórdão STJ" if proc else "Nota de Informativo STJ"
+        documento = texto_nota
+        # B2 · a nota de informativo é nota, mesmo quando traz o número do processo. Rotular
+        # de acórdão as que tinham `processo` preenchido é o que punha 10,8M tokens no grupo
+        # errado da ablação.
+        tipo = "Nota de Informativo STJ"
 
         registros.append({
             "fonte":              "stj_acordaos",
@@ -264,6 +301,8 @@ def carregar_stj_acordaos(limite: int | None = None) -> list[dict]:
             "identificador_valor": str(i.get("informativo", "")),
             "area":               i.get("ramo", ""),
             "status_vinculante":  "Persuasivo",
+            "processo":           proc,      # a identidade que faltava
+            "informativo":        str(i.get("informativo", "")),
             "documento":          documento,
             "raw":                i,
         })
@@ -280,6 +319,16 @@ def carregar_stf_acordaos(limite: int | None = None) -> list[dict]:
         return []
 
     itens = [json.loads(l) for l in path.read_text("utf-8").splitlines() if l.strip()]
+    # C17 · Fora o DESPACHO, que não é acórdão. São 2.555 dos 4.520 registros deste arquivo,
+    # com mediana de 955 caracteres e nenhuma ementa: "cite-se", "manifeste-se", o
+    # expediente que move o processo sem decidir questão de direito. Fichá-los produz 2.029
+    # fichas de precedente sobre documentos que não têm precedente nenhum.
+    #
+    # A exclusão tem de valer nos DOIS braços ao mesmo tempo. Tirar o despacho só do bruto
+    # derruba o pareamento de 93,3% para 66,7% e o F3 aborta a montagem — e aborta com
+    # razão, porque aí o expandido realmente ficha material que o bruto não tem. O portão
+    # não estava reclamando da limpeza; estava dizendo onde mais ela faltava.
+    itens = [i for i in itens if not str(i.get("doc_id") or "").startswith("despacho")]
     # Prioriza os que têm ementa + acórdão relevante
     itens = [i for i in itens if len(i.get("texto", "")) > 300]
     # Ordena: primeiro os com ementa, depois os com tese RG
@@ -291,11 +340,27 @@ def carregar_stf_acordaos(limite: int | None = None) -> list[dict]:
     if limite:
         itens = itens[:limite]
 
+    # A classe vem vazia em 2.491 dos 4.456 registros, e sem ela o identificador caía num
+    # `doc_id` interno do tipo `despacho1784114` — um número de documento, não de processo,
+    # que o braço bruto não tem como casar. Mas o campo `processo` traz "ADI 7322", com a
+    # classe dentro: 2.488 dos 2.491 são recuperáveis dali. É a mesma correção que o lado do
+    # STJ acabou de receber, e a mesma família do C1: o dado existe e está no campo vizinho.
+    RX_CLASSE = re.compile(r"\b(ADI|ADPF|ADC|ADO|RE|ARE|HC|RHC|MS|MI|Rcl|AP|Inq|ACO|AR|AI|"
+                           r"EREsp|Pet|SS|STA|SL|Cm)\b", re.IGNORECASE)
     registros = []
     for i in itens:
-        classe = i.get("classe", "")
-        numero = i.get("numero", "")
-        juris_id = f"JURIS:STF:{classe}:{numero}" if classe and numero else f"JURIS:STF:{i.get('doc_id','?')}"
+        classe = (i.get("classe") or "").strip()
+        numero = str(i.get("numero") or "").strip()
+        if not classe:
+            m = RX_CLASSE.search(str(i.get("processo") or ""))
+            if m:
+                classe = m.group(1).upper()
+        if not numero:
+            m = re.search(r"(\d[\d.]*)", str(i.get("processo") or ""))
+            if m:
+                numero = m.group(1).replace(".", "")
+        juris_id = (f"JURIS:STF:{classe}:{numero}" if classe and numero
+                    else f"JURIS:STF:{i.get('doc_id','?')}")
 
         is_vinc  = classe in ("ADI", "ADPF", "ADC", "ADO") or i.get("is_repercussao_geral")
         status   = "Vinculante (efeito erga omnes)" if is_vinc else "Persuasivo"

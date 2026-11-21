@@ -42,7 +42,7 @@ def escreve_relatorio(est: dict, teto: int, anos: list[int]) -> None:
     cel = est["celulas"]
     total = sum(v.get("n", 0) for v in cel.values())
     feitas = len(cel)
-    previstas = len(CLASSES_STF) * len(anos)
+    previstas = len(cel) or len(CLASSES_STF) * len(anos)
     md = [
         "# Coleta histórica de acórdãos do STF", "",
         f"Atualizado em {datetime.datetime.now():%d/%m/%Y %H:%M}. Gerado por "
@@ -79,6 +79,24 @@ def escreve_relatorio(est: dict, teto: int, anos: list[int]) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--teto",  type=int, default=200)
+    # T3 · restringe a rodada a certas classes. Sem isto, acrescentar classe à semente
+    # obrigaria a varrer de novo as nove já colhidas para chegar às novas.
+    # T2 · refazer as células que SATURARAM, quando se sobe o teto.
+    #
+    # O teto de 200 prendia em 114 das 153 células — RE, ADI, HC, MS e Rcl bateram o limite
+    # nos 17 anos, ARE em 16. Onde satura todo ano, o teto não descreve o acervo do
+    # tribunal: define o arquivo, e o que existe além dele fica sem medida.
+    #
+    # O estado não registrava COM QUE TETO cada célula foi colhida, e sem isso uma célula de
+    # 200 e uma de 500 são indistinguíveis — não dava para saber o que refazer. Passa a
+    # registrar, e as células antigas sem o campo são tratadas pelo teto que se sabe ter
+    # sido usado (`--teto-antigo`).
+    ap.add_argument("--refazer-saturadas", action="store_true",
+                    help="recolhe as células que bateram o teto anterior")
+    ap.add_argument("--teto-antigo", type=int, default=200,
+                    help="teto das células gravadas antes de o estado registrar esse campo")
+    ap.add_argument("--classes", default="",
+                    help="lista separada por vírgula; vazio = todas as de CLASSES_STF")
     ap.add_argument("--desde", type=int, default=2010)
     ap.add_argument("--ate",   type=int, default=2026)
     args = ap.parse_args()
@@ -88,11 +106,18 @@ def main() -> None:
     os.makedirs(os.path.dirname(SAIDA), exist_ok=True)
     escreve_relatorio(est, args.teto, anos)
 
-    for classe in CLASSES_STF:
+    _alvo = [c.strip() for c in args.classes.split(",") if c.strip()] or list(CLASSES_STF)
+    for classe in _alvo:
         for ano in anos:
             chave = f"{classe}|{ano}"
-            if chave in est["celulas"]:
-                continue
+            cel = est["celulas"].get(chave)
+            if cel is not None:
+                teto_ant = cel.get("teto", args.teto_antigo)
+                saturou = cel.get("n", 0) >= teto_ant
+                if not (args.refazer_saturadas and saturou and args.teto > teto_ant):
+                    continue
+                print(f"[{datetime.datetime.now():%H:%M}] {classe} {ano} · saturou em "
+                      f"{cel.get('n')}/{teto_ant}, refazendo com teto {args.teto}", flush=True)
             t0 = time.time()
             print(f"[{datetime.datetime.now():%H:%M}] {classe} {ano}...", flush=True)
             try:
@@ -101,14 +126,16 @@ def main() -> None:
                     desde=f"{ano}-01-01", ate=f"{ano}-12-31") or []
             except Exception as e:
                 print(f"    falhou: {type(e).__name__}: {e}", flush=True)
-                est["celulas"][chave] = {"n": 0, "erro": f"{type(e).__name__}"}
+                est["celulas"][chave] = {"n": 0, "erro": f"{type(e).__name__}",
+                                         "teto": args.teto}
                 json.dump(est, open(ESTADO, "w"), ensure_ascii=False)
                 escreve_relatorio(est, args.teto, anos)
                 continue
             with open(SAIDA, "a", encoding="utf-8") as f:
                 for r in regs:
                     f.write(json.dumps(r, ensure_ascii=False) + "\n")
-            est["celulas"][chave] = {"n": len(regs), "seg": round(time.time() - t0)}
+            est["celulas"][chave] = {"n": len(regs), "seg": round(time.time() - t0),
+                                     "teto": args.teto}
             json.dump(est, open(ESTADO, "w"), ensure_ascii=False)
             escreve_relatorio(est, args.teto, anos)
             print(f"    {len(regs)} acórdãos em {time.time()-t0:.0f}s", flush=True)

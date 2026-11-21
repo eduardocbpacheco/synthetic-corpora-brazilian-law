@@ -28,6 +28,18 @@ Uso:
     python augmentation/crawlers/stf_acordaos.py --classe ADI --limite 500
 """
 
+# T5 · NÃO truncar o texto na gravação.
+#
+# Este arquivo gravava `texto[:8000]` e `texto[:10000]`, e a perda é mensurável sem
+# recoletar porque `n_chars` guarda o tamanho original: 419 acórdãos no histórico (4,0 M
+# caracteres), 53 no arquivo atual (0,5 M) e 3.110 no inteiro teor de informativo (1,1 M).
+#
+# O corte pertence à ETAPA 4, onde se decide composição, e lá ele opera sobre texto que
+# ainda existe. Aqui ele destrói: o que passou de 10.000 caracteres não volta sem nova
+# requisição ao tribunal. Ver `docs/CADEIA_CUSTODIA_CORPUS.md`.
+#
+# `n_chars` continua gravado, agora como testemunha de que nada foi cortado.
+
 from __future__ import annotations
 
 import argparse
@@ -62,6 +74,19 @@ CLASSES_STF = {
     "MS":   "Mandado de Segurança",
     "Rcl":  "Reclamação",
     "AP":   "Ação Penal",
+    # T3 · sete classes que nunca foram buscadas. Estavam no acervo só como variante
+    # incidental devolvida dentro das nove acima — RHC com 104 documentos, Inq com 62,
+    # Pet 46, RMS 42, AO 34, AR 30, MI 21, ADO 5 —, nunca por consulta própria.
+    # Nenhuma delas é marginal para o corpus: Inq e Pet são a competência originária
+    # criminal, AR é a rescisória, MI o mandado de injunção, ADO a omissão inconstitucional.
+    "RHC":  "Recurso Ordinário em Habeas Corpus",
+    "RMS":  "Recurso Ordinário em Mandado de Segurança",
+    "Inq":  "Inquérito",
+    "Pet":  "Petição",
+    "AO":   "Ação Originária",
+    "AR":   "Ação Rescisória",
+    "MI":   "Mandado de Injunção",
+    "ADO":  "Ação Direta de Inconstitucionalidade por Omissão",
 }
 
 
@@ -109,7 +134,7 @@ def parse_acordao_stf(html: str, classe: str, numero: str) -> dict | None:
 
         # Extrai ementa
         m_ementa = re.search(r"EMENTA[:\s]+(.*?)(?=ACÓRDÃO|RELATÓRIO|DECISÃO|$)", texto, re.DOTALL | re.IGNORECASE)
-        ementa = m_ementa.group(1).strip()[:2000] if m_ementa else ""
+        ementa = m_ementa.group(1).strip() if m_ementa else ""
 
         # Relator
         m_rel = re.search(r"Relator[a]?\s*[:\(]\s*([A-ZÁÉÍÓÚÂÊÔÃÕÜ][a-záéíóúâêôãõü\s\.]+?)(?:\n|,|\))", texto)
@@ -132,7 +157,7 @@ def parse_acordao_stf(html: str, classe: str, numero: str) -> dict | None:
             "orgao":    orgao,
             "data":     data,
             "ementa":   ementa,
-            "texto":    texto[:8000],
+            "texto":    texto,
             "n_chars":  len(texto),
         }
     except Exception as e:
@@ -201,8 +226,8 @@ def _parse_hit(hit: dict) -> dict | None:
             "data_julgamento": data,
             "is_repercussao_geral": src.get("is_repercussao_geral", False),
             "tema_rg":         src.get("documental_tese_tema_texto", ""),
-            "ementa":          ementa[:3000],
-            "texto":           texto[:10000],
+            "ementa":          ementa,
+            "texto":           texto,
             "n_chars":         len(texto),
             "inteiro_teor_url": src.get("inteiro_teor_url", ""),
         }

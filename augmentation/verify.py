@@ -139,11 +139,50 @@ def verificar_estrutural(expansao: str) -> dict:
 
 # ── Camada 1: Existência ───────────────────────────────────────────────────────
 
+
+# Ver `verificar_existencia`. Duplicado de `pipeline/referencias.py` de propósito: o
+# `augmentation/` roda em máquina remota, sem o `pipeline/` ao lado.
+_CIT_JULGADO = re.compile(
+    r"\b(REsp|AREsp|RE|ARE|HC|RHC|MS|AI|Rcl|ADI|ADC|ADPF|EREsp|AgRg)\s*"
+    r"n?[ºo°]?\s*([\d][\d.]{2,})", re.IGNORECASE)
+
+
+def _numero_molde(numero: str) -> bool:
+    d = re.sub(r"\D", "", numero)
+    if len(d) < 4:
+        return False
+    for i in range(len(d) - 3):
+        j = d[i:i + 4]
+        if all(int(j[k + 1]) - int(j[k]) == 1 for k in range(3)):
+            return True
+        if all(int(j[k]) - int(j[k + 1]) == 1 for k in range(3)):
+            return True
+    return len(set(d)) <= 2
+
 def verificar_existencia(expansao: str) -> dict:
     idx = _build_indices()
     problemas = []
     verificados = []
     nao_encontrados = []
+
+    # Q2 · citação de julgado com número-molde.
+    #
+    # A conferência abaixo olha identificadores `JURIS:`, que são os que a ficha declara em
+    # campo. A citação em texto corrido — "conforme REsp 1.234.567/PR" — passava inteira,
+    # e é ali que a invenção mora: medido nas 14.794 fichas de norma, 1.205 das 3.472
+    # citações de julgado (34,7%) trazem número de dígitos em sequência, e o
+    # `REsp 1.234.567` sozinho aparece 538 vezes.
+    #
+    # Não dá para exigir que o julgado citado EXISTA no corpus, como se exige do artigo: o
+    # corpus tem 5.181 julgados de um universo de centenas de milhares, e um REsp real
+    # ausente não prova invenção. O número-molde prova.
+    for m in _CIT_JULGADO.finditer(expansao):
+        if _numero_molde(m.group(2)):
+            problemas.append({
+                "tipo": "julgado_inventado",
+                "ref": f"{m.group(1).upper()} {m.group(2)}",
+                "detalhe": "número com dígitos em sequência: é molde, não processo",
+            })
 
     juris_refs = re.findall(r"JURIS:(STF|STJ):(SUM|RG|REP|SUM:VINC):(?:TEMA|VINC:)?(\d+)", expansao)
 

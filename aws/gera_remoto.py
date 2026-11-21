@@ -28,7 +28,7 @@ Uso:
 """
 from __future__ import annotations
 
-import argparse, json, sys, time
+import argparse, json, os, sys, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -44,8 +44,9 @@ BASE_HF = "Polygl0t/Tucano2-qwen-3.7B-Instruct"
 
 
 def gera_condicao(host: str, porta: int, cond: str, modelo: str, questoes,
-                  n_runs: int, temp: float, max_tokens: int, workers: int) -> Path:
-    destino = ROOT / "avaliacao/resultados" / f".cache_{cond}"
+                  n_runs: int, temp: float, max_tokens: int, workers: int,
+                  raiz: Path | None = None, pensar: bool | None = None) -> Path:
+    destino = (raiz or ROOT / "avaliacao/resultados") / f".cache_{cond}"
     destino.mkdir(parents=True, exist_ok=True)
     alvo = destino / "fase1_respostas.json"
     cache: dict = json.loads(alvo.read_text("utf-8")) if alvo.exists() else {}
@@ -61,13 +62,18 @@ def gera_condicao(host: str, porta: int, cond: str, modelo: str, questoes,
 
     def uma(q):
         faltam = n_runs - len(cache.get(q.id, []))
-        r = requests.post(url, timeout=1800, json={
+        corpo = {
             "model": modelo or BASE_HF,
             "messages": mensagens(q.tipo, q.enunciado),
             "temperature": temp,
             "max_tokens": max_tokens,
             "n": faltam,
-        })
+        }
+        # O Qwen3 base pensa por padrão: no bloco 0 as 1.050 respostas vinham com
+        # <think> de ~2.400 caracteres, que comia o teto (achado D-2, nov/2026).
+        if pensar is not None:
+            corpo["chat_template_kwargs"] = {"enable_thinking": pensar}
+        r = requests.post(url, timeout=int(os.environ.get("GERA_TIMEOUT", 1800)), json=corpo)
         r.raise_for_status()
         return q.id, [c["message"]["content"].strip() for c in r.json()["choices"]]
 
@@ -120,12 +126,25 @@ def main() -> None:
                          "inclusive o <|im_end|> que aparece duas vezes no prompt, e com "
                          "isso o modelo nunca emitia parada — finish_reason=length em "
                          "100% das chamadas e 14 pontos de nota a menos")
-    ap.add_argument("--max-tokens", type=int, default=1500)
+    ap.add_argument("--max-tokens", type=int, default=1500,
+                    help="1.500 cortava 50%% a 85%% das peças no fecho, onde estão os "
+                         "critérios formais (achado D-1, nov/2026). A regeração usa 3.000, o que cabe na janela de 4.096 do Tucano com o maior prompt de peça (1.049)")
+    ap.add_argument("--tipo", choices=["discursiva", "peca"], default=None,
+                    help="gera só um gênero; a regeração do D-1 refaz só as peças")
+    ap.add_argument("--raiz-cache", default=None,
+                    help="pasta dos caches; a regeração grava em avaliacao/resultados_t3k "
+                         "para não tocar nas respostas originais")
+    ap.add_argument("--pensar", choices=["sim", "nao"], default=None,
+                    help="liga ou desliga o raciocínio do Qwen3 (enable_thinking)")
     ap.add_argument("--workers", type=int, default=32,
                     help="requisições em voo; o vLLM enfileira o excedente sozinho")
     args = ap.parse_args()
 
     questoes = load_benchmark_split(str(ROOT / args.benchmark), split="benchmark")
+    if args.tipo:
+        questoes = [q for q in questoes if q.tipo == args.tipo]
+    raiz = (ROOT / args.raiz_cache) if args.raiz_cache else None
+    pensar = None if args.pensar is None else args.pensar == "sim"
     print(f"{len(questoes)} questões · prompt canônico {PROMPT_VERSAO}")
 
     disp = requests.get(f"http://{args.host}:{args.porta}/v1/models", timeout=30).json()
@@ -140,7 +159,7 @@ def main() -> None:
             print(f"  ✗ {cond}: adapter '{modelo}' não está no servidor — pulando")
             continue
         gera_condicao(args.host, args.porta, cond, modelo, questoes,
-                      args.n_runs, args.temp, args.max_tokens, args.workers)
+                      args.n_runs, args.temp, args.max_tokens, args.workers, raiz, pensar)
 
 
 if __name__ == "__main__":

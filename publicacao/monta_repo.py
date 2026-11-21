@@ -32,7 +32,8 @@ CONTEUDO: list[tuple[str, str]] = [
     ("pipeline", "monta_benchmark_v2.py"),      # as 105 questões e os 940 critérios
     ("pipeline", "parse_oab_pdfs.py"),          # provas e espelhos a partir dos PDFs
     ("pipeline", "coleta_carreiras.py"),        # provas de concursos de carreira
-    ("pipeline", "recoleta_normas.py"),         # coleta de leis federais
+    ("pipeline", "recoleta_normas.py"),
+    ("pipeline", "coleta_cesp.py"),          # A6 · Constituição Estadual de SP         # coleta de leis federais
     ("pipeline", "coleta_stf_historico.py"),    # acórdãos do STF
     ("pipeline", "build_juris_bruto.py"),       # jurisprudência no braço bruto
     ("pipeline", "expande_cascata.py"),         # os exemplos a dois saltos
@@ -46,6 +47,21 @@ CONTEUDO: list[tuple[str, str]] = [
     ("augmentation/crawlers", "stj_acordaos.py"),
     ("augmentation/crawlers", "enunciados.py"),
     ("aws", "build_ablacao_regime.py"),         # o par casado em orçamento de tokens
+
+    # ── 1b · correção de cobertura (corpus v3 da seção 4.6)
+    ("pipeline", "monta_corpus_v3.py"),         # orquestra a reconstrução de cobertura completa
+    ("pipeline", "referencia_v3.py"),           # os 80 diplomas de referência a >=98%
+    ("pipeline", "referencias.py"),             # índice de referências usado pela remontagem
+    ("pipeline", "recoleta_v3.py"),
+    ("pipeline", "coleta_trab_trib_v3.py"),
+    ("pipeline", "gera_cards_v3.py"),           # as fichas sobre o texto normativo completo
+    ("pipeline", "rechunk_v3.py"), ("pipeline", "rechunk_v4.py"),
+    ("pipeline", "identificadores.py"), ("pipeline", "vigencia.py"),
+    ("pipeline", "datas_precedente.py"), ("pipeline", "teses_oficiais.py"),
+    ("pipeline", "monta_dados_cpt_v3.py"),      # os dados de pré-treino dos dois braços v3
+    ("aws", "cadeia_v3.sh"),                    # treino do v3 e do par casado nos blocos I e VI
+    ("pipeline", "gera_v3_t3k.sh"),             # geração e julgamento no teto de 3.000 tokens
+    ("docs", "CORPUS_V3.md"),                   # a ficha do corpus v3 e a regra de orçamento
 
     # ── 2 · treino e geração (as cadeias que rodaram as 180 condições)
     ("aws", "cadeia_ablacao_tucano.sh"), ("aws", "cadeia_ablacao_qwen.sh"),
@@ -89,7 +105,7 @@ CONTEUDO: list[tuple[str, str]] = [
     ("dataset", "*.py"), ("dataset", "*.md"), ("dataset/manifestos", "*.json"),
     ("explorador", "*.py"), ("explorador/static", "*"),
     ("publicacao", "monta_repo.py"), ("publicacao", "para_pdf.py"),
-    ("publicacao", "monta_standalone.py"), ("publicacao", "*.md"),
+    ("publicacao", "monta_standalone.py"), ("publicacao", "README.md"), ("publicacao", "LEIAME.md"),
 ]
 
 # Arquivos que vão para a RAIZ do repositório publicado. Ficam versionados aqui, em

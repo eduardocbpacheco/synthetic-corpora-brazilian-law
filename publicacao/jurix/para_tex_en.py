@@ -55,7 +55,14 @@ MATEMATICO = {"ρ": _m("rho"), "κ": _m("kappa"), "×": _m("times"), "⊂": _m("
               "·": BARRA + "textperiodcentered" + ABRE + FECHA,
               "⁻": CIFRAO + "^" + ABRE + "-" + FECHA + CIFRAO,
               "¹": CIFRAO + "^" + ABRE + "1" + FECHA + CIFRAO,
-              "⁵": CIFRAO + "^" + ABRE + "5" + FECHA + CIFRAO}
+              "⁵": CIFRAO + "^" + ABRE + "5" + FECHA + CIFRAO,
+              # ordinais do português ("Súmula Vinculante nº 3"): a Times do IOS não os tem
+              # e o glifo saía trocado por "ž"
+              "º": BARRA + "textsuperscript" + ABRE + "o" + FECHA,
+              "ª": BARRA + "textsuperscript" + ABRE + "a" + FECHA,
+              # reticências: a fonte monoespaçada dos blocos literais não tem o glifo
+              "…": "...",
+              "²": CIFRAO + "^" + ABRE + "2" + FECHA + CIFRAO}
 
 
 def txt(s: str) -> str:
@@ -133,7 +140,18 @@ def tabela(bloco: str) -> str:
         if len(celulas) < len(cabs):          # linha sob rowspan: falta a primeira célula
             celulas = [""] * (len(cabs) - len(celulas)) + celulas
         linhas.append(" & ".join(celulas) + r" \\")
-    col = "ll" + "r" * (len(cabs) - 2)
+    # A nota sob a tabela (`p.tnota`) era descartada aqui, e com ela a única citação de
+    # Fleiss [8] no artigo dos juízes: o PDF listava a referência sem citá-la, e um parecer
+    # da JURIX 2026 apontou isso. A nota entra agora abaixo do tabular, em corpo menor.
+    nota = re.search(r'<p[^>]*class="tnota"[^>]*>(.*?)</p>', bloco, re.S)
+    rodape = ("\\par\\vspace{3pt}\\begin{minipage}{\\textwidth}\\footnotesize %s\\end{minipage}\n"
+              % inline(nota.group(1))) if nota else ""
+    # Alinhamento pela classe do cabeçalho: `th.n` é coluna numérica, à direita; o resto à
+    # esquerda. Antes eram sempre duas à esquerda e o resto à direita, o que punha texto
+    # (identificadores de modelo, por exemplo) colado na margem direita.
+    ths = re.findall(r"<th([^>]*)>", bloco)
+    col = "".join("r" if 'class="n"' in a else "l" for a in ths) if len(ths) == len(cabs) \
+        else "ll" + "r" * (len(cabs) - 2)
     # `!ht` em vez de `t`: com quatro tabelas de treze linhas, empurrar todas para o topo
     # da página deixava meia página em branco antes de cada uma. `footnotesize` e colunas
     # apertadas recuperam mais uma página inteira, e a tabela continua legível porque o que
@@ -141,8 +159,9 @@ def tabela(bloco: str) -> str:
     return ("\\begin{table}[!ht]\n\\centering\n\\caption{%s}\n"
             "\\footnotesize\\setlength{\\tabcolsep}{%dpt}\n"
             "\\begin{tabular}{%s}\n\\hline\n%s \\\\\n\\hline\n%s\n\\hline\n"
-            "\\end{tabular}\n\\end{table}\n" %
-            (legenda, TABCOLSEP, col, " & ".join("\\textbf{%s}" % c for c in cabs), "\n".join(linhas)))
+            "\\end{tabular}\n%s\\end{table}\n" %
+            (legenda, TABCOLSEP, col, " & ".join("\\textbf{%s}" % c for c in cabs), "\n".join(linhas),
+             rodape))
 
 
 def main() -> None:
@@ -164,9 +183,10 @@ def main() -> None:
     corpo = re.split(r'<p[^>]*class="chaves"[^>]*>', corpo, 1)[1].split("</p>", 1)[1]
 
     saida: list[str] = []
+    apendice = False
     for m in re.finditer(
             r'<figure[^>]*class="(?:tab|fig)".*?</figure>|<h2[^>]*>.*?</h2>|<h3[^>]*>.*?</h3>'
-            r'|<ol class="refs">.*?</ol>|<ul>.*?</ul>|<p[^>]*>.*?</p>', corpo, re.S):
+            r'|<ol class="refs">.*?</ol>|<ul>.*?</ul>|<pre[^>]*>.*?</pre>|<p[^>]*>.*?</p>', corpo, re.S):
         b = m.group(0)
         if b.startswith("<figure"):
             saida.append(figura(b) if 'class="fig"' in b else tabela(b))
@@ -174,6 +194,14 @@ def main() -> None:
             t = inline(re.sub(r'<span class="num">.*?</span>', "", b))
             if t.lower().startswith(("referências", "references")):
                 break
+            # Apêndices: o primeiro liga a numeração por letra do LaTeX, e o rótulo
+            # "Appendix A." do HTML sai do título, porque o \appendix já o escreve.
+            if t.lower().startswith(("appendix", "apêndice")):
+                if not apendice:
+                    saida.append("\\appendix")
+                    apendice = True
+                saida.append("\\section{%s}" % re.sub(r"^(Appendix|Apêndice) [A-Z]\.\s*", "", t))
+                continue
             # Agradecimentos e declarações não entram na numeração, e o limite de páginas
             # da conferência os exclui da contagem — por isso a seção vive aqui e não no
             # corpo.
@@ -183,6 +211,16 @@ def main() -> None:
         elif b.startswith("<h3"):
             saida.append("\\subsection{%s}" %
                          inline(re.sub(r'<span class="num">.*?</span>', "", b)))
+        elif b.startswith("<pre"):
+            # Texto literal (prompt, exemplo): linha a linha, em corpo pequeno e monoespaçado.
+            # Não é verbatim, para que as linhas longas quebrem dentro da margem.
+            linhas = re.sub(r"^<pre[^>]*>|</pre>$", "", b).strip("\n").split("\n")
+            # \newline e não \\: uma linha que começa com "[" depois de \\ vira o argumento
+            # opcional de espaçamento e o LaTeX para com "Missing number".
+            corpo_pre = "\\newline\n".join(inline(l) if l.strip() else "~" for l in linhas)
+            # identificadores longos sem espaço (os nós do card) só quebram na barra
+            corpo_pre = corpo_pre.replace("|", "|\\allowbreak{}")
+            saida.append("\\begin{quote}\\footnotesize\\ttfamily\\raggedright\n%s\n\\end{quote}" % corpo_pre)
         elif b.startswith("<ul"):
             itens = "\n".join("\\item %s" % inline(i)
                               for i in re.findall(r"<li[^>]*>(.*?)</li>", b, re.S))

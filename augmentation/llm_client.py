@@ -33,6 +33,11 @@ log = logging.getLogger(__name__)
 
 TEACHER_BEDROCK = "mistral.mistral-large-3-675b-instruct"   # melhor professor do benchmark
 
+# Tokens consumidos no Bedrock nesta execução, por modelo: {modelo: {chamadas, entrada, saida}}.
+import threading as _threading
+USO: dict = {}
+_TRAVA_USO = _threading.Lock()
+
 
 class _BedrockChatShim:
     """Expõe a interface .chat.completions.create() do OpenAI SDK em cima do
@@ -56,6 +61,16 @@ class _BedrockChatShim:
         if system:
             kwargs["system"] = system
         r = self._br.converse(**kwargs)
+        # Corpus v3 · o custo de API passa a ser MEDIDO, não estimado. O Bedrock devolve a
+        # contagem de tokens em `usage`, e ela era jogada fora; quem gera ficha não tinha
+        # como dizer quanto gastou. Acumula por modelo, sob trava (as chamadas vêm de
+        # threads), e quem quiser o total lê `USO`.
+        u = r.get("usage") or {}
+        with _TRAVA_USO:
+            c = USO.setdefault(model, {"chamadas": 0, "entrada": 0, "saida": 0})
+            c["chamadas"] += 1
+            c["entrada"] += int(u.get("inputTokens", 0))
+            c["saida"] += int(u.get("outputTokens", 0))
         texto = r["output"]["message"]["content"][0]["text"]
         return SimpleNamespace(
             choices=[SimpleNamespace(message=SimpleNamespace(content=texto))]

@@ -75,7 +75,10 @@ def fatorial(n: int, tarefa: str, rot: str, tam: dict[str, int]) -> str:
             L.append(("<tr class='ctrl'>" if reg == "nenhum" else "<tr>") + "".join(cs) + "</tr>\n")
     # A legenda fica curta de propósito: o que ela explicava passou para o parágrafo que
     # antecede as tabelas, e repetir a mesma nota quatro vezes custava um terço de página.
-    return tab(n, f"Desempenho dos modelos {rot}.", cab, L)
+    return tab(n, f"Nota {rot}, em percentual dos pontos do espelho, por modelo, regime de "
+                  f"pré-treino e bloco de ajuste fino; média de três sementes de dez execuções cada, "
+                  f"corrigida pelo Kimi K2.5 (discursiva) ou pelo GPT-OSS 120B (peça). Em destaque, o "
+                  f"melhor bloco de cada linha.", cab, L)
 
 
 ABREV = {"administrativo": "Admin.", "civil": "Civil", "constitucional": "Const.",
@@ -101,7 +104,7 @@ def areas(n: int) -> str:
                 cs.append(f'<td class="n">{pt(st.mean(v),1,"%")}</td>' if v
                           else '<td class="n g">—</td>')
             L.append(("<tr class='ctrl'>" if reg == "nenhum" else "<tr>") + "".join(cs) + "</tr>\n")
-    return tab(n, "Desempenho por área do direito no Tucano2 3,7B, média dos seis blocos.",
+    return tab(n, "Nota por área do direito no Tucano2 3,7B, em percentual dos pontos do espelho, média dos seis blocos e de três sementes de dez execuções cada.",
                cab, L)
 
 
@@ -119,11 +122,47 @@ def modelos(n: int) -> str:
                   "permite distinguir efeito de escala de efeito de exposição prévia.", cab, L)
 
 
+def correcao(n: int) -> str:
+    """Tabela 5: a correção de cobertura. Medida no teto de 3.000 tokens (resultados_t3k),
+    em bloco I, para as três construções serem comparáveis. Recarrega nota.py com o teto de
+    3.000 — por isso roda DEPOIS das Tabelas 1-4, que ficam no teto de 1.500."""
+    import os, importlib
+    os.environ["NOTA_PECAS"] = str(RAIZ / "avaliacao" / "resultados_t3k")
+    import nota as _n
+    importlib.reload(_n)
+    S10 = tuple(range(42, 52))
+    dados = [("Grade congelada (cobertura incompleta)", "bruto", "expandido", (42, 43, 44)),
+             ("v3 (cobertura completa)", "v3_bruto", "v3_expandido", (42, 43, 44)),
+             ("Par casado, 22,35 M (dez sementes)", "casado_bruto", "casado_expandido", S10)]
+    cab = ["Construção do corpus", "#Formal", "#Mérito", "#Discursiva"]
+    L = []
+    for rot, bru, exp, sem in dados:
+        cs = [f"<td>{rot}</td>"]
+        for tk in ("peca_formal", "peca_material", "discursiva"):
+            b = _n.media_sementes("I", bru, "3.7B", tk, sementes=sem)
+            e = _n.media_sementes("I", exp, "3.7B", tk, sementes=sem)
+            d = (e - b) if (b is not None and e is not None) else None
+            cs.append(f'<td class="n">{pt(b,1)} · {pt(e,1)} · {ptd(d,1)}</td>')
+        L.append("<tr>" + "".join(cs) + "</tr>\n")
+    cap = ("O contraste texto-bruto/ficha na escrita de peça do Tucano2 3,7B sob três construções "
+           "de corpus, no bloco de ajuste fino I e no teto de geração de 3.000 tokens. Cada célula "
+           "traz a nota do texto bruto, a nota da ficha e a diferença entre elas (ficha menos texto "
+           "bruto), em percentual dos pontos da banca. A grade congelada carrega a cobertura "
+           "incompleta do experimento de 180 condições; o v3 completa os 80 diplomas de referência "
+           "a pelo menos 98%; o par casado mantém o orçamento de tokens em 22,35 M e a composição "
+           "por grupo idêntica nos dois braços.")
+    pe = ("No par casado a diferença no formal é significativa (pareada sobre as dez sementes, "
+          "t = 4,1 com nove graus de liberdade, p ≈ 0,003, nove das dez sementes positivas); as "
+          "diferenças no mérito e na discursiva não são.")
+    return tab(n, cap, cab, L, pe)
+
+
 if __name__ == "__main__":
     tam = tamanhos()
     partes = []
     for i, (tk, rot) in enumerate(TAREFAS):
         partes.append(fatorial(1 + i, tk, rot, tam))
     partes.append(areas(4))
+    partes.append(correcao(5))   # por último: recarrega nota.py no teto de 3.000
     (SAI / "tabelas.html").write_text("\n".join(partes), "utf-8")
     print(f"{len(partes)} tabelas · {(SAI / 'tabelas.html').stat().st_size:,} bytes")
