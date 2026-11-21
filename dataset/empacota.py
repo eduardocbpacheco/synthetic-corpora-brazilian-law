@@ -83,6 +83,17 @@ EM_INGLES = {
         "Pipeline for a study on corpus form in legal domain adaptation",
         "Corpus collection and assembly, card generation, the chains that trained the 180 "
         "conditions, judging, and the analysis that recomputes every table of the paper."),
+    "corpus-treino-v3": (
+        "Coverage correction (v3): the paired corpus rebuilt to full statutory coverage",
+        "The paired continued-pre-training corpus rebuilt so all 80 reference statutes reach "
+        "at least 98% coverage in both the raw and the card arm under a matched token budget. "
+        "This is the corpus behind the coverage correction of section 4.6; version 1.0 remains "
+        "citable for reproducing the frozen 180-condition grid."),
+    "julgamentos-t3k": (
+        "3,000-token-cap judgments: coverage correction and matched pair",
+        "The judgments measured at the 3,000-token generation cap that back section 4.6: the "
+        "frozen grid at the new cap, the full-coverage v3 corpus, and the ten-seed matched "
+        "pair. Additive to the 1,500-cap judgments of version 1.0, which still back tables 1-4."),
 }
 
 

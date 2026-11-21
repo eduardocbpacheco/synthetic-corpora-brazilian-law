@@ -82,6 +82,31 @@ it a decision threshold below which two judges are not distinguishable.</p>
 
 <p>The gold standard is inherited from the Rabula benchmark and carries its licence.</p>
 """,
+    "corpus-treino-v3": """
+<p>The paired continued pre-training corpus of the companion study, <strong>rebuilt to full
+statutory coverage</strong>. In version 1.0 the card arm was starved of normative text — the
+Civil Code entered with 57 of its 2,046 articles, the ordinary Criminal Code not at all, and
+only 6 of the 80 reference statutes reached the intended threshold. Here all 80 statutes reach
+at least 98% coverage in <em>both</em> arms, raw text and cards, under a matched token budget,
+changing nothing else in the budget rule.</p>
+
+<p>This is the corpus behind the coverage correction reported in section 4.6 of the ablation
+paper: once the card arm carries its statutory material, the formal ordering of the frozen grid
+reverses and the card format gains on document form. <strong>Version 1.0 remains published and
+citable</strong> for reproducing the frozen 180-condition grid; this version is the one
+recommended for new work.</p>
+""",
+    "julgamentos-t3k": """
+<p>The judgments measured at the <strong>3,000-token generation cap</strong> that back section
+4.6 of the ablation paper. One file per condition, one line per (run, question, criterion),
+with the judge's verdict, the points the board assigns, the area of law and the criterion
+class — the same schema as version 1.0.</p>
+
+<p>Three constructions are covered at the new cap: the frozen grid, the full-coverage v3
+corpus, and the ten-seed matched pair that isolates corpus <em>form</em> from token volume and
+composition. These judgments are <strong>additive</strong> to the 1,500-token-cap judgments of
+version 1.0, which still back tables 1 to 4; they do not replace them.</p>
+""",
     "codigo": """
 <p>Snapshot of the pipeline at submission time: corpus collection and assembly, generation of
 the structured cards, the chains that trained the 180 conditions, the judging step, and the

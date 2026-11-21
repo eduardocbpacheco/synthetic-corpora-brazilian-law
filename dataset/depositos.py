@@ -91,6 +91,33 @@ DEPOSITOS: dict[str, dict] = {
             ("revisao/", "revisao", "*.py"),
         ],
     },
+    "corpus-treino-v3": {
+        "titulo": "Correção de cobertura (v3): corpus pareado completo e julgamentos no teto de 3.000 tokens",
+        "versao": "3.0",
+        "resumo": "A correção da seção 4.6: o corpus pareado reconstruído com os 80 diplomas "
+                  "de referência a pelo menos 98% de cobertura — nos dois braços, bruto e "
+                  "ficha, com orçamento de tokens casado — e os julgamentos no teto de geração "
+                  "de 3.000 tokens que sustentam a inversão da ordem formal e o par casado de "
+                  "dez sementes. Acompanha a ficha do corpus v3.",
+        "licenca": "CC BY 4.0 para a compilação; ver DATASHEET_v3 quanto ao material gerado",
+        "itens": [
+            ("cpt_v3/", "data/ablacao_regime_v3", "*.jsonl"),
+            ("cpt_v3/manifesto.json", "data/ablacao_regime_v3/manifesto.json"),
+            ("DATASHEET_v3.md", "docs/CORPUS_V3.md"),
+        ],
+    },
+    "julgamentos-t3k": {
+        "titulo": "Julgamentos no teto de 3.000 tokens: correção de cobertura e par casado",
+        "versao": "1.1",
+        "resumo": "Os julgamentos no teto de geração de 3.000 tokens que sustentam a seção 4.6: "
+                  "a grade medida ao novo teto, o corpus v3 de cobertura completa e o par "
+                  "casado de dez sementes. Acrescentam-se aos julgamentos da v1.0 (teto de "
+                  "1.500) sem substituí-los; as tabelas de 1 a 4 continuam na v1.0.",
+        "licenca": "CC BY 4.0",
+        "itens": [
+            ("julgamentos_t3k/", "avaliacao/resultados_t3k", "*_partes.jsonl"),
+        ],
+    },
 }
 
 

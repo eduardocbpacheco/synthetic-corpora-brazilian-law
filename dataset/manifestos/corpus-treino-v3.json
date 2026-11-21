@@ -1,0 +1,96 @@
+{
+ "titulo": "Correção de cobertura (v3): corpus pareado completo e julgamentos no teto de 3.000 tokens",
+ "versao": "3.0",
+ "resumo": "A correção da seção 4.6: o corpus pareado reconstruído com os 80 diplomas de referência a pelo menos 98% de cobertura — nos dois braços, bruto e ficha, com orçamento de tokens casado — e os julgamentos no teto de geração de 3.000 tokens que sustentam a inversão da ordem formal e o par casado de dez sementes. Acompanha a ficha do corpus v3.",
+ "licenca": "CC BY 4.0 para a compilação; ver DATASHEET_v3 quanto ao material gerado",
+ "deposito": "corpus-treino-v3",
+ "congelado_em": "2026-11-20 23:20:23",
+ "arquivos": 12,
+ "bytes": 837813702,
+ "itens": [
+  {
+   "caminho": "cpt_v3/bruto_completo.jsonl",
+   "origem": "data/ablacao_regime_v3/bruto_completo.jsonl",
+   "bytes": 208638706,
+   "linhas": 42034,
+   "sha256": "dacb7d08cb939f0b2cf2ac37e33ca5f4ebe41662101ac572533244b4838711b2"
+  },
+  {
+   "caminho": "cpt_v3/bruto_valid.jsonl",
+   "origem": "data/ablacao_regime_v3/bruto_valid.jsonl",
+   "bytes": 2443286,
+   "linhas": 641,
+   "sha256": "98a5ac2f3f2576ede9a24f64e144a9ecf98bccb50e0a5af1d86e5737890f467e"
+  },
+  {
+   "caminho": "cpt_v3/cards_v3.jsonl",
+   "origem": "data/ablacao_regime_v3/cards_v3.jsonl",
+   "bytes": 48024893,
+   "linhas": 6124,
+   "sha256": "107261031deefc97f0e62d79772e5c743539a295c8e48b7cb30847195181b411"
+  },
+  {
+   "caminho": "cpt_v3/casado_qwen_bruto.jsonl",
+   "origem": "data/ablacao_regime_v3/casado_qwen_bruto.jsonl",
+   "bytes": 70013812,
+   "linhas": 15304,
+   "sha256": "efa47c104ca3c08bb55856660cdb11cc0630a65fc7e045bbaa18e9729b2afb60"
+  },
+  {
+   "caminho": "cpt_v3/casado_qwen_expandido.jsonl",
+   "origem": "data/ablacao_regime_v3/casado_qwen_expandido.jsonl",
+   "bytes": 67177190,
+   "linhas": 12617,
+   "sha256": "03381821257f9b966f57716060e44cafd7537a13882c54542e6891a46d5fb91c"
+  },
+  {
+   "caminho": "cpt_v3/casado_tucano_bruto.jsonl",
+   "origem": "data/ablacao_regime_v3/casado_tucano_bruto.jsonl",
+   "bytes": 90191270,
+   "linhas": 19957,
+   "sha256": "76103844fa91777c0c50a3f4f0a7feda8da8ede08ae5569ebcb4e87adea5f99f"
+  },
+  {
+   "caminho": "cpt_v3/casado_tucano_expandido.jsonl",
+   "origem": "data/ablacao_regime_v3/casado_tucano_expandido.jsonl",
+   "bytes": 84113694,
+   "linhas": 15786,
+   "sha256": "ca280f237fae272baf152dfb80b2b7c164ccaa0173736711b0695af4f7b089f7"
+  },
+  {
+   "caminho": "cpt_v3/custo_api.jsonl",
+   "origem": "data/ablacao_regime_v3/custo_api.jsonl",
+   "bytes": 1081,
+   "linhas": 4,
+   "sha256": "6962a24fe604f929db1c4087ec909b7edce516d677111f2e094aedf1cfc12d4e"
+  },
+  {
+   "caminho": "cpt_v3/expandido_completo.jsonl",
+   "origem": "data/ablacao_regime_v3/expandido_completo.jsonl",
+   "bytes": 267139126,
+   "linhas": 49834,
+   "sha256": "d47e3e32c14cf57ac8f6ef1029a9edcbcddddbc56a801163c723c412d7a363f6"
+  },
+  {
+   "caminho": "cpt_v3/expandido_valid.jsonl",
+   "origem": "data/ablacao_regime_v3/expandido_valid.jsonl",
+   "bytes": 5835,
+   "linhas": 1,
+   "sha256": "61054a4e9a76fdee91be2f969729133e1134bcd5269031106dd4f03bf79d80cf"
+  },
+  {
+   "caminho": "cpt_v3/manifesto.json",
+   "origem": "data/ablacao_regime_v3/manifesto.json",
+   "bytes": 41923,
+   "linhas": null,
+   "sha256": "6992076ca7ae637c3050535a5101d109a17088afddf08e37c4787b6efe9cab78"
+  },
+  {
+   "caminho": "DATASHEET_v3.md",
+   "origem": "docs/CORPUS_V3.md",
+   "bytes": 22886,
+   "linhas": null,
+   "sha256": "fe04dcaee07f5c47940477f0fd2f066e6ca2cf059e67fca73bee177aa8a8533a"
+  }
+ ]
+}
